@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>客户管理 · 移动端</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font:14px/1.5 "PingFang SC","Microsoft YaHei",sans-serif;background:#f4f6fa;color:#303744;max-width:480px;margin:0 auto}
+    .header{background:linear-gradient(135deg,#3477f6,#5b9bff);color:#fff;padding:16px 18px;position:sticky;top:0;z-index:10}
+    .header h1{font-size:17px;font-weight:600}
+    .header .stats{display:flex;gap:18px;margin-top:8px;font-size:12px;opacity:.9}
+    .stats b{font-size:18px;margin-right:3px}
+    .search-bar{position:sticky;top:85px;z-index:9;background:#fff;padding:10px 14px;border-bottom:1px solid #e8ecf2;display:flex;gap:8px}
+    .search-bar select{flex:1;height:36px;border:1px solid #dce2eb;border-radius:8px;padding:0 10px;background:#fff;font-size:13px;color:#4d5a70}
+    .search-bar input{flex:2;height:36px;border:1px solid #dce2eb;border-radius:8px;padding:0 12px;font-size:13px;outline:0}
+    .list{padding:12px 14px}
+    .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(36,58,98,.06)}
+    .card .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:6px}
+    .card .tag.first{background:#e8f7ed;color:#20a365}.card .tag.second{background:#fff3e6;color:#ef7a31}
+    .card h3{font-size:15px;margin:8px 0 6px;color:#1677ff}
+    .card .meta{font-size:12px;color:#8d96a5;margin-bottom:4px}
+    .card .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .card .salary{color:#ef7a31;font-weight:700;font-size:16px}
+    .card .demand{font-size:13px;color:#4d5a70}
+    .card .contact{font-size:12px;color:#8d96a5;margin-top:6px;padding-top:8px;border-top:1px solid #f0f2f5}
+    .empty{text-align:center;padding:60px 20px;color:#a0a9b5}
+    .empty p{margin-top:8px}
+    .fab{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;background:#3477f6;color:#fff;border:0;font-size:24px;box-shadow:0 4px 14px rgba(52,119,246,.4);cursor:pointer}
+    .overlay{display:none;position:fixed;inset:0;background:#1d2c4860;z-index:50}
+    .overlay.show{display:flex;align-items:flex-end}
+    .sheet{width:100%;max-height:80vh;background:#fff;border-radius:16px 16px 0 0;padding:20px 18px 30px;overflow:auto}
+    .sheet h2{margin-bottom:16px;font-size:16px}
+    .sheet label{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:13px;color:#58667b}
+    .sheet input,.sheet select{height:38px;border:1px solid #dce2eb;border-radius:6px;padding:0 10px;font-size:13px}
+    .sheet .actions{display:flex;gap:10px;margin-top:16px}
+    .sheet button{flex:1;height:40px;border-radius:8px;border:1px solid #dce2eb;background:#fff;font-size:14px}
+    .sheet .primary{background:#3477f6;color:#fff;border-color:#3477f6}
+    .detail-card{background:#fff;border-radius:10px;padding:16px;margin-bottom:10px}
+    .detail-card .label{font-size:11px;color:#8d96a5;margin-bottom:2px}
+    .detail-card .value{font-size:14px;color:#303744;margin-bottom:12px}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>客户管理</h1>
+    <div class="stats"><span><b id="total">0</b>客户总数</span><span><b>119</b>在招岗位</span></div>
+  </div>
+  <div class="search-bar">
+    <select id="region" onchange="render()"><option value="">全部地区</option><option>天津市</option><option>湖南省</option><option>浙江省</option></select>
+    <input id="search" placeholder="搜索企业名称" oninput="render()">
+  </div>
+  <div class="list" id="list"></div>
+  <div class="empty" id="empty"><div style="font-size:40px">📋</div><p>没有匹配的客户</p></div>
+  <button class="fab" onclick="openAdd()">＋</button>
+  <div class="overlay" id="addOverlay" onclick="closeAdd(event)"><form class="sheet" onsubmit="addCustomer(event)"><h2>添加客户</h2><label>企业名称 *<input name="company" required placeholder="请输入"></label><label>一二手单<select name="orderType"><option>一手单</option><option>二手单</option></select></label><div style="display:flex;gap:8px"><label style="flex:1">省<input name="province" placeholder="如：广东省"></label><label style="flex:1">市<input name="city" placeholder="如：中山市"></label></div><label>招聘岗位<input name="position" placeholder="如：操作员"></label><label>近30天需求人数<input name="demand" placeholder="如：30人"></label><label>薪资待遇<input name="salary" placeholder="如：5500-7500元"></label><div class="actions"><button type="button" onclick="closeAdd()">取消</button><button class="primary">保存</button></div></form></div>
+  <div class="overlay" id="detailOverlay" onclick="closeDetail(event)"><div class="sheet" id="detailSheet"></div></div>
+
+  <script>
+    const data=[
+      {seq:'1',province:'天津市',city:'天津市',district:'津南区',town:'海河教育园',orderType:'一手单',company:'天津六合时利和电子有限公司',interviewContact:'李经理 15620433222',highlights:'恒温车间、管理规范',demand:'30人',environment:'空调车间，坐班为主',employmentType:'正式工',holidayWorker:'否',position:'操作员 / 质检员',gender:'男女不限',age:'20–45岁',ethnicity:'不限',household:'不限',documents:'身份证原件',education:'初中及以上',hardRequirements:'无大面积纹身',jobContent:'电子零部件组装与质检',workHours:'两班倒，月休4天',meal:'包住 / 餐补',salary:'5500–7500元',salaryDetail:'底薪+加班费+绩效',subsidy:'夜班补贴20元/天',settlement:'月结',payday:'每月15日',payrollDesc:'银行卡发薪',workAddress:'海河教育园区雅深路8号',interviewAddress:'企业南门招聘中心',interviewDress:'身份证、黑色水笔；着装整洁',interviewTime:'工作日 9:00–17:00',interviewProcess:'面试→体检→培训→上岗',onboardingMaterials:'身份证复印件2张、照片4张',onboardingFee:'体检费100元',keywords:'晋升快、留任奖'},
+      {seq:'2',province:'湖南省',city:'湘潭市',district:'雨湖区',town:'九华街道',orderType:'一手单',company:'湖南吉利汽车部件有限公司',interviewContact:'梁经理 138****2186',highlights:'大型汽车集团、订单稳定',demand:'50人',environment:'自动化生产线',employmentType:'派遣工',holidayWorker:'否',position:'装配工 / 质检',gender:'男',age:'18–45岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'初中及以上',hardRequirements:'能适应倒班',jobContent:'汽车零部件装配',workHours:'8:00–20:00 两班倒',meal:'包吃住',salary:'6000–8500元',salaryDetail:'计时工资+加班费',subsidy:'满勤奖300元',settlement:'月结',payday:'每月20日',payrollDesc:'遇节假日顺延',workAddress:'雨湖区吉利西路',interviewAddress:'吉利西路公交站集合',interviewDress:'携带身份证',interviewTime:'周一至周五',interviewProcess:'集合→面试→体检→入职',onboardingMaterials:'身份证、银行卡',onboardingFee:'无',keywords:'包吃住、工作稳定'},
+      {seq:'3',province:'浙江省',city:'台州市',district:'黄岩区',town:'院桥镇',orderType:'二手单',company:'台州爱玛机车制造有限公司',interviewContact:'姬经理 189****7042',highlights:'知名品牌、宿舍条件好',demand:'20人',environment:'标准化车间',employmentType:'派遣工',holidayWorker:'是',position:'普工 / 仓管',gender:'男女不限',age:'18–48岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'不限',hardRequirements:'识字，会写姓名',jobContent:'电动车零部件生产',workHours:'长白班为主',meal:'工作餐 / 宿舍',salary:'6500–9000元',salaryDetail:'计件工资，多劳多得',subsidy:'高温补贴、工龄奖',settlement:'月结',payday:'每月18日',payrollDesc:'企业统一发薪',workAddress:'黄岩区院桥镇',interviewAddress:'厂区一号门',interviewDress:'运动鞋、长裤',interviewTime:'每周二、四',interviewProcess:'面试→分配岗位→入职',onboardingMaterials:'身份证、1寸照片',onboardingFee:'无',keywords:'长白班、可接受暑假工'}
+    ];
+    function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+    function render(){
+      const q=document.getElementById('search').value.trim().toLowerCase(),region=document.getElementById('region').value,list=document.getElementById('list'),empty=document.getElementById('empty');
+      const filtered=data.filter(r=>{if(q&&!r.company.toLowerCase().includes(q))return false;if(region&&!r.province.includes(region))return false;return true});
+      document.getElementById('total').textContent=data.length;
+      if(!filtered.length){list.innerHTML='';empty.style.display='block';return}
+      empty.style.display='none';
+      list.innerHTML=filtered.map(r=>`<div class="card" onclick="openDetail('${r.seq}')">
+        <div><span class="tag ${r.orderType==='一手单'?'first':'second'}">${esc(r.orderType)}</span></div>
+        <h3>${esc(r.company)}</h3>
+        <div class="meta">${esc(r.province+ ' ' + r.city + ' ' + r.district)}</div>
+        <div class="row"><span class="demand">${esc(r.position)} · ${esc(r.demand)}</span><span class="salary">${esc(r.salary)}</span></div>
+        <div class="contact">对接人：${esc(r.interviewContact)}</div>
+      </div>`).join('')
+    }
+    function openDetail(seq){
+      const r=data.find(d=>d.seq===seq);if(!r)return;
+      document.getElementById('detailSheet').innerHTML=`<h2>${esc(r.company)}</h2><div class="detail-card">
+        <div class="detail-grid">${[
+          ['一二手单',r.orderType],['招聘岗位',r.position],['需求人数',r.demand+'人'],['薪资待遇',r.salary],
+          ['省份',r.province],['城市',r.city],['区县',r.district],['镇',r.town],
+          ['面试对接',r.interviewContact],['工作环境',r.environment],['用工性质',r.employmentType],
+          ['性别要求',r.gender],['年龄要求',r.age],['学历要求',r.education],
+          ['工作内容',r.jobContent],['工作时间',r.workHours],['食宿',r.meal],
+          ['结算方式',r.settlement],['发薪日',r.payday],['工作地点',r.workAddress],
+          ['面试地点',r.interviewAddress],['面试时间',r.interviewTime],['面试入职流程',r.interviewProcess],
+          ['入职材料',r.onboardingMaterials],['入职费用',r.onboardingFee],['亮点',r.keywords]
+        ].map(([k,v])=>`<div><div class="label">${esc(k)}</div><div class="value">${esc(v||'—')}</div></div>`).join('')}</div>
+      </div>`;
+      document.getElementById('detailOverlay').classList.add('show');
+    }
+    function closeDetail(e){if(e.target===e.currentTarget)document.getElementById('detailOverlay').classList.remove('show')}
+    function openAdd(){document.getElementById('addOverlay').classList.add('show')}
+    function closeAdd(e){if(!e||e.target===e.currentTarget)document.getElementById('addOverlay').classList.remove('show')}
+    function addCustomer(e){
+      e.preventDefault();const f=new FormData(e.target);
+      data.unshift({seq:String(data.length+1),company:f.get('company'),orderType:f.get('orderType'),province:f.get('province')||'—',city:f.get('city')||'—',district:'—',town:'—',interviewContact:'待分配',position:f.get('position')||'待确认',demand:f.get('demand')||'待确认',salary:f.get('salary')||'面议',highlights:'',environment:'',employmentType:'',holidayWorker:'',gender:'',age:'',ethnicity:'',household:'',documents:'',education:'',hardRequirements:'',jobContent:'',workHours:'',meal:'',salaryDetail:'',subsidy:'',settlement:'',payday:'',payrollDesc:'',workAddress:'',interviewAddress:'',interviewDress:'',interviewTime:'',interviewProcess:'',onboardingMaterials:'',onboardingFee:'',keywords:''});
+      e.target.reset();closeAdd();render();
+    }
+    render();
+  </script>
+</body>
+</html>
