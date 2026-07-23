@@ -40,6 +40,21 @@
     .mob-pages button{height:28px;min-width:28px;border:1px solid #dfe4ed;background:#fff;border-radius:4px;font-size:12px;cursor:pointer;color:#4d5a70}
     .mob-pages button:disabled{opacity:.35;cursor:default}
     .mob-pages button.on{color:#1677ff;border-color:#1677ff;background:#f0f7ff}
+    .req-collapse{margin:8px 12px 16px;border:1px solid #edf0f5;border-radius:8px;background:#fff;overflow:hidden;box-shadow:0 1px 4px #30466d08}
+    .req-collapse-header{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;user-select:none;-webkit-user-select:none}
+    .req-collapse-header h3{margin:0;font-size:14px;color:#303744;font-weight:500}
+    .req-collapse-header .arrow{font-size:10px;color:#8d96a5;transition:transform .2s}
+    .req-collapse-header .arrow.open{transform:rotate(180deg)}
+    .req-collapse-body{display:none;border-top:1px solid #f0f2f5;padding:6px 0}
+    .req-collapse-body.open{display:block}
+    .req-collapse-body table{width:100%;border-collapse:collapse;font-size:11px}
+    .req-collapse-body th,.req-collapse-body td{padding:8px 10px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}
+    .req-collapse-body th{background:#f7f8fa;color:#858e9d;font-weight:500;white-space:nowrap}
+    .req-collapse-body td{color:#4c5563;line-height:1.5}
+    .req-collapse-body .rno{color:#7d8796;text-align:center;width:28px}
+    .req-collapse-body .rname{color:#303744;font-weight:500;white-space:nowrap;width:80px}
+    .req-collapse-body .rresult{color:#1677ff}
+    .req-collapse-body tbody tr:last-child td{border-bottom:0}
     .filter-overlay{display:none;position:fixed;inset:0;background:#1d2c4860;z-index:80}
     .filter-overlay.show{display:block}
     .filter-sheet{position:absolute;right:0;top:0;bottom:0;width:300px;background:#fff;overflow:auto;padding:18px;box-shadow:-8px 0 24px #1d2c4820}
@@ -79,6 +94,28 @@
     <button id="mobPrev" onclick="changePage(-1)" disabled>‹</button>
     <button class="on" id="mobPageBtn">1</button>
     <button id="mobNext" onclick="changePage(1)">›</button>
+  </div>
+  <div class="req-collapse">
+    <div class="req-collapse-header" onclick="toggleReqList()">
+      <h3>需求清单</h3>
+      <span class="arrow" id="reqArrow">⌄</span>
+    </div>
+    <div class="req-collapse-body" id="reqBody">
+      <table>
+        <thead><tr><th>#</th><th>功能名称</th><th>功能目的</th><th>处理结果</th></tr></thead>
+        <tbody>
+          <tr><td class="rno">1</td><td class="rname">替换客户列表表头</td><td>将现有客户列表字段替换为客户提供的完整字段，并保留后续扩展能力</td><td class="rresult">页面加载后直接展示新版字段结构，已有客户数据不丢失</td></tr>
+          <tr><td class="rno">2</td><td class="rname">自定义字段应用于添加企业</td><td>用户新增的自定义字段同步进入"添加企业"的招聘信息区域</td><td class="rresult">新建企业保存后，自定义字段值同步写入列表对应列</td></tr>
+          <tr><td class="rno">3</td><td class="rname">支持编辑字段</td><td>系统预设字段和自定义字段均支持修改显示名称</td><td class="rresult">保存设置后各端使用最新字段名称和枚举值</td></tr>
+          <tr><td class="rno">4</td><td class="rname">拖拽调整字段排序</td><td>列表字段支持通过鼠标长按拖拽改变展示顺序</td><td class="rresult">新顺序同步作用于当前列表和字段管理区域</td></tr>
+          <tr><td class="rno">5</td><td class="rname">各字段独立筛选</td><td>每个业务字段可按配置使用模糊查询或枚举筛选</td><td class="rresult">筛选后列表数量、分页和导出范围同步刷新</td></tr>
+          <tr><td class="rno">6</td><td class="rname">新增企业管理</td><td>支持创建新企业，录入基础信息、招聘信息和合同信息</td><td class="rresult">保存后企业数据立即同步到列表中</td></tr>
+          <tr><td class="rno">7</td><td class="rname">合同管理</td><td>支持为企业添加合同，维护合同名称、编号、起止时间、到期提醒</td><td class="rresult">合同列表即时更新，支持编辑和删除</td></tr>
+          <tr><td class="rno">8</td><td class="rname">移动端适配</td><td>小程序端支持横版表格查看、筛选和拖拽排序</td><td class="rresult">移动端使用与 Web 端一致的数据和筛选逻辑</td></tr>
+          <tr><td class="rno">9</td><td class="rname">导出功能</td><td>支持将当前筛选后的客户数据导出为 CSV 文件</td><td class="rresult">导出数据范围与当前列表筛选结果一致</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="filter-overlay" id="filterOverlay" onclick="closeFilterPanel(event)">
     <div class="filter-sheet" onclick="event.stopPropagation()">
@@ -299,6 +336,10 @@
       box.innerHTML=chips.join('')
     }
     renderMobileTable();
+    function toggleReqList(){
+      const body=document.getElementById('reqBody'),arrow=document.getElementById('reqArrow');
+      body.classList.toggle('open');arrow.classList.toggle('open')
+    }
   </script>
 </body>
 </html>
