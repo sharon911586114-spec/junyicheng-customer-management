@@ -166,7 +166,6 @@
     const columnFilters=new Map();
     let filteringFieldId='';
     let dragFieldId='';
-    const defaultOrder=fields.map(f=>f.id);
     function fieldIndex(id){return fields.findIndex(f=>f.id===id)}
     function fieldById(id){return fields.find(f=>f.id===id)}
     function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
@@ -192,7 +191,7 @@
         if(field.id==='actions'){th.textContent=field.label}
         else if(field.id==='seq'){th.innerHTML='<span class="th-grip">⋮⋮</span> 序号'}
         else{
-          th.innerHTML=`<span class="th-grip">⋮⋮</span><span class="th-label">${esc(field.label)}</span><button class="mob-head-filter ${columnFilters.has(field.id)?'active':''}" onclick="openColumnFilter(event,'${field.id}')">⌄</button>`;
+          th.innerHTML='<span class="th-grip">⋮⋮</span><span class="th-label">'+esc(field.label)+'</span><button class="mob-head-filter '+(columnFilters.has(field.id)?'active':'')+'" onclick="openColumnFilter(event,\''+field.id+'\')">⌄</button>';
           bindHeaderDrag(th,field.id);
         }
         headRow.appendChild(th);
@@ -298,7 +297,7 @@
       }else{
         const sel=new Set(rule?.values||[]);
         const vals=[...new Set([...enumValues(field),...seedData.map(r=>r[field.id])])].filter(Boolean).sort();
-        document.getElementById('enumList').innerHTML=vals.map(v=>`<label><input type="checkbox" value="${esc(v)}" ${sel.has(v)?'checked':''}><span>${esc(v||'（空）')}</span></label>`).join('')
+        document.getElementById('enumList').innerHTML=vals.map(v=>'<label><input type="checkbox" value="'+esc(v)+'" '+(sel.has(v)?'checked':'')+'><span>'+esc(v||'（空）')+'</span></label>').join('')
       }
       document.getElementById('filterOverlay').classList.add('show')
     }
