@@ -43,35 +43,6 @@
       <div class="table-wrap"><table id="customerTable"><thead><tr></tr></thead><tbody></tbody></table></div>
       <div class="pages"><span>共 <b id="count">5</b> 条数据</span><button id="prev" onclick="changePage(-1)">‹</button><button class="on" id="pageNo">1 / 2</button><button id="next" onclick="changePage(1)">›</button></div>
     </section>
-    <section class="panel requirements-panel" style="margin-top:24px">
-      <div class="head" style="padding:16px 24px;border-bottom:1px solid #edf0f4;display:flex;align-items:center;gap:8px">
-        <h2 style="font-size:16px;color:#2c3345;margin:0">需求清单</h2>
-        <span style="font-size:12px;color:#99a3b3">共 9 项需求</span>
-      </div>
-      <div style="overflow-x:auto;padding:0">
-        <table style="min-width:800px;width:100%;border-collapse:collapse">
-          <thead>
-            <tr>
-              <th style="width:60px;text-align:center">序号</th>
-              <th style="width:200px">功能名称</th>
-              <th>功能目的</th>
-              <th style="width:100px;text-align:center">处理结果</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td style="text-align:center">1</td><td>客户信息管理</td><td>统一管理客户基本信息、招聘需求与合同信息</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">2</td><td>招聘信息字段</td><td>支持40个业务字段，覆盖用工性质、岗位、薪资、食宿等维度</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">3</td><td>表格设置抽屉</td><td>自定义字段显隐与排序，适配不同岗位的关注维度</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">4</td><td>表头筛选与排序</td><td>按省市区、用工性质等枚举字段快速筛选客户</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">5</td><td>企业添加表单</td><td>分步填写基础信息、招聘信息和合同信息</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">6</td><td>合同管理</td><td>企业合同增删改，支持长期/固定期限合同</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">7</td><td>字典管理</td><td>统一维护枚举字段可选值，同步作用于 Web/Mob 端</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">8</td><td>移动端预览</td><td>小程序风格卡片列表，支持筛选、搜索、详情弹窗</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-            <tr><td style="text-align:center">9</td><td>数据导出</td><td>支持将筛选后的客户数据导出为 CSV 文件</td><td style="text-align:center"><span style="display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:12px">已完成</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
   </main>
   <div class="overlay" id="settings" onclick="closeSettings(event)"><aside class="drawer"><div class="drawer-head"><div><h2>表格设置</h2><p>字段命名、显示状态与拖拽排序</p></div><button class="close" onclick="closeSettings()">×</button></div><div class="tip">☷ 长按左侧拖拽手柄可自由排序；系统预设字段与自定义字段均可修改名称</div><h3><span class="logic-target">字段管理<span class="logic-marker" onclick="showLogicNote(event,3)">3</span></span><button class="add-field logic-target" onclick="openFieldModal('create')">＋ 新增自定义字段<span class="logic-marker" onclick="showLogicNote(event,2)">2</span></button></h3><div class="columns" id="columns"></div><div class="drawer-foot"><button onclick="resetColumns()">恢复默认顺序</button><button class="primary" onclick="saveSettings()">保存设置</button></div></aside></div>
   <aside class="logic-card" id="logicNotes"><div class="logic-card-head"><div><div class="logic-card-index"><b id="logicCardNo">1</b><span>客户管理 · 本次需求</span></div><h2 id="logicCardTitle">功能说明</h2></div><button class="close" onclick="closeLogicNotes()">×</button></div><div class="logic-card-content" id="logicCardContent"></div></aside>
