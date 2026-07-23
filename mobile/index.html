@@ -2,341 +2,350 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>客户管理 · 小程序原型</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>客户管理</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#1677ff;--bg:#f5f5f5;--text:#333;--muted:#999;--line:#eee;--white:#fff;--orange:#fa541c;--tag-bg:#eaf4ff;--shadow:0 2px 12px rgba(0,0,0,.08)}
-body{background:#e8ecf1;font:14px/1.5 "PingFang SC","Microsoft YaHei",sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px 0;color:var(--text);-webkit-font-smoothing:antialiased}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:PingFang SC,-apple-system,BlinkMacSystemFont,sans-serif;background:#e8ecf1;display:flex;flex-direction:column;align-items:center;padding:30px 20px;min-height:100vh;color:#333}
 
-.phone-shell{width:375px;background:var(--bg);border-radius:36px;overflow:hidden;box-shadow:0 0 0 6px #1a1a1a,0 0 0 8px #333,0 8px 40px rgba(0,0,0,.35);position:relative;display:flex;flex-direction:column;min-height:700px}
+/* 手机外壳 */
+.phone-shell{width:375px;background:#000;border-radius:36px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.35),0 0 0 2px #1a1a1a,0 0 0 4px #2d2d2d,0 0 0 6px #1a1a1a;margin-bottom:24px;position:relative}
+.phone-screen{background:#f5f5f5;border-radius:26px;overflow:hidden;height:700px;display:flex;flex-direction:column;position:relative}
+.phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#000;border-radius:0 0 18px 18px;z-index:20}
 
-.status-bar{height:32px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:11px;font-weight:600;color:#333}
-.status-bar .time{font-size:12px}
-.status-icons{display:flex;align-items:center;gap:5px;font-size:11px}
+/* 状态栏 */
+.status-bar{background:#fff;padding:10px 24px 6px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;color:#000;position:relative;z-index:10}
+.status-time{font-weight:700}
+.status-icons{display:flex;align-items:center;gap:5px;font-size:11px;color:#333}
 
-.nav-bar{height:44px;background:#fff;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid var(--line)}
-.nav-back{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:18px;color:#333;cursor:pointer;background:none;border:none;padding:4px 8px}
-.nav-title{font-size:17px;font-weight:600;color:#333}
+/* 导航栏 */
+.nav-bar{background:#fff;padding:8px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #ececec;position:relative;z-index:10}
+.nav-back{font-size:20px;color:#333;text-decoration:none;cursor:pointer;width:32px;text-align:center;line-height:32px;user-select:none}
+.nav-title{flex:1;text-align:center;font-size:17px;font-weight:600;color:#000}
 
-.search-bar{padding:10px 14px;background:#fff}
-.search-box{display:flex;align-items:center;height:34px;background:#f2f2f2;border-radius:17px;padding:0 14px}
-.search-box .search-icon{color:#b3b3b3;font-size:15px;margin-right:6px}
-.search-box input{flex:1;border:0;background:transparent;outline:0;font-size:14px;color:#333}
-.search-box input::placeholder{color:#b3b3b3}
+/* 搜索栏 */
+.search-bar{padding:10px 16px;background:#fff;position:relative;z-index:10}
+.search-input-wrap{background:#f5f5f5;border-radius:20px;padding:8px 14px;display:flex;align-items:center;gap:8px}
+.search-icon{font-size:15px;color:#999;flex-shrink:0}
+.search-input{border:0;background:transparent;outline:none;flex:1;font-size:14px;color:#333}
+.search-input::placeholder{color:#b0b0b0}
 
-.filter-tags{display:flex;gap:8px;padding:10px 14px;background:#fff;overflow-x:auto;white-space:nowrap;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+/* 筛选标签 */
+.filter-tags{background:#fff;padding:8px 16px 12px;display:flex;gap:8px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;border-bottom:1px solid #f0f0f0;scrollbar-width:none}
 .filter-tags::-webkit-scrollbar{display:none}
-.filter-tag{flex-shrink:0;height:30px;line-height:30px;padding:0 14px;border-radius:15px;font-size:13px;background:#f2f2f2;color:#666;border:0;cursor:pointer;transition:all .2s}
-.filter-tag.active{background:var(--blue);color:#fff}
+.filter-tag{flex-shrink:0;padding:6px 14px;border-radius:16px;font-size:13px;cursor:pointer;user-select:none;background:#f5f5f5;color:#666;border:1px solid transparent;transition:all .2s}
+.filter-tag.active{background:#e6f0ff;color:#1677ff;border-color:#1677ff;font-weight:500}
 
-.list-header{padding:12px 14px 8px;display:flex;justify-content:space-between;align-items:center}
-.list-header .count{font-size:13px;color:var(--muted)}
-.list-header .count b{color:var(--blue);font-weight:600}
+/* 计数栏 */
+.count-bar{background:#fff;padding:8px 16px;font-size:13px;color:#888;border-bottom:1px solid #f0f0f0}
+.count-bar b{color:#1677ff;font-weight:600}
 
-.card-list{flex:1;overflow-y:auto;padding:0 14px 14px;-webkit-overflow-scrolling:touch;max-height:520px}
+/* 列表滚动区域 */
+.list-scroll{flex:1;overflow-y:auto;padding:10px 16px;-webkit-overflow-scrolling:touch}
 
-.card{background:var(--white);border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s}
-.card:active{transform:scale(.98)}
-.card-company{font-size:16px;font-weight:700;color:var(--blue);margin-bottom:8px}
-.card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.card-tag{display:inline-block;height:24px;line-height:24px;padding:0 10px;border-radius:4px;font-size:11px;background:var(--tag-bg);color:var(--blue)}
-.card-tag.order-type-2{background:#fff7e6;color:#d46b08}
-.card-info{display:flex;gap:16px;font-size:13px;color:#555;margin-bottom:6px}
-.card-info .salary-highlight{color:var(--orange);font-weight:600}
-.card-addr{font-size:12px;color:var(--muted);margin-bottom:10px}
-.card-actions{display:flex;gap:0;border-top:1px solid var(--line);padding-top:10px}
-.card-btn{flex:1;text-align:center;font-size:13px;color:var(--blue);cursor:pointer;background:none;border:0;padding:6px 0}
-.card-btn+.card-btn{border-left:1px solid var(--line)}
+/* 客户卡片 */
+.card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04);position:relative}
+.card-company{font-size:16px;font-weight:700;color:#1677ff;margin-bottom:8px;line-height:1.3}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.card-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:#e6f0ff;color:#1677ff;border:1px solid #b3d4ff}
+.card-tag.is-second{background:#fff7e6;color:#d46b08;border-color:#ffd591}
+.card-tag.is-holiday{background:#f6ffed;color:#389e0d;border-color:#b7eb8f}
+.card-info{font-size:13px;color:#555;margin-bottom:4px;display:flex;gap:12px;flex-wrap:wrap}
+.card-info .salary{color:#ef7a31;font-weight:700}
+.card-addr{font-size:12px;color:#999;margin-bottom:10px;display:flex;align-items:center;gap:4px}
+.card-addr-icon{font-size:14px}
+.card-actions{display:flex;gap:8px;border-top:1px solid #f5f5f5;padding-top:10px}
+.card-btn{flex:1;text-align:center;padding:7px 0;border-radius:6px;font-size:13px;cursor:pointer;user-select:none;transition:all .15s}
+.card-btn-detail{background:#1677ff;color:#fff;border:0}
+.card-btn-detail:active{background:#125ec7}
+.card-btn-call{background:#fff;color:#1677ff;border:1px solid #1677ff}
+.card-btn-call:active{background:#e6f0ff}
 
-.empty-state{padding:60px 20px;text-align:center;color:var(--muted);font-size:14px}
+/* 底部 TabBar */
+.tab-bar{background:#fff;display:flex;border-top:1px solid #ececec;padding:4px 0 env(safe-area-inset-bottom,0);position:relative;z-index:10}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:4px 0;font-size:10px;color:#999;cursor:pointer;user-select:none;text-decoration:none;transition:color .2s}
+.tab-icon{font-size:22px;margin-bottom:2px;line-height:1}
+.tab-item.active{color:#1677ff}
+.tab-item.active .tab-icon{color:#1677ff}
 
-.tab-bar{display:flex;height:50px;background:#fff;border-top:1px solid var(--line)}
-.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:var(--muted);gap:2px;cursor:pointer;border:0;background:none}
-.tab-item .tab-icon{font-size:20px}
-.tab-item.active{color:var(--blue)}
+/* 详情弹窗遮罩 */
+.detail-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:1000;display:none;justify-content:center;align-items:flex-end}
+.detail-overlay.show{display:flex}
+.detail-overlay.show .detail-sheet{transform:translateY(0)}
+.detail-sheet{background:#fff;width:100%;max-width:500px;max-height:75vh;border-radius:16px 16px 0 0;overflow:hidden;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1)}
+.detail-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #f0f0f0;position:sticky;top:0;background:#fff;z-index:5}
+.detail-sheet-head h3{font-size:17px;color:#000;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-close{width:28px;height:28px;border-radius:50%;background:#f5f5f5;border:0;cursor:pointer;font-size:18px;color:#666;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:12px}
+.detail-sheet-body{overflow-y:auto;padding:16px 20px;flex:1}
+.detail-field{display:flex;padding:10px 0;border-bottom:1px solid #f8f8f8;font-size:14px}
+.detail-label{color:#888;width:110px;flex-shrink:0;font-size:13px}
+.detail-value{color:#333;flex:1;word-break:break-all}
 
-/* Detail popup overlay */
-.overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:10}
-.overlay.show{display:block}
-.drawer{position:absolute;left:0;right:0;bottom:0;max-height:78%;background:#fff;border-radius:16px 16px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .28s ease}
-.drawer.show{transform:translateY(0)}
-.drawer-handle{height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.drawer-handle::before{content:'';width:36px;height:5px;background:#d9d9d9;border-radius:3px}
-.drawer-head{padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
-.drawer-head h3{font-size:17px;color:var(--blue);margin-bottom:4px}
-.drawer-head .drawer-tags{display:flex;gap:6px;flex-wrap:wrap}
-.drawer-body{flex:1;overflow-y:auto;padding:14px 16px 24px;-webkit-overflow-scrolling:touch}
-.drawer-field{margin-bottom:12px;display:flex;gap:8px}
-.drawer-label{flex-shrink:0;width:100px;font-size:12px;color:var(--muted)}
-.drawer-value{flex:1;font-size:13px;color:#333}
+/* 下拉手柄 */
+.sheet-handle{width:36px;height:5px;background:#d9d9d9;border-radius:3px;margin:8px auto 0}
 
-/* Requirements section outside phone */
-.req-section{width:375px;margin-top:18px}
-.req-toggle{width:100%;height:42px;background:#fff;border:1px solid #e0e0e0;border-radius:8px;font-size:14px;color:#555;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-.req-toggle .arrow{transition:transform .25s;font-size:12px}
-.req-toggle.open .arrow{transform:rotate(180deg)}
-.req-body{display:none;background:#fff;border:1px solid #e0e0e0;border-radius:0 0 8px 8px;border-top:0;margin-top:-1px;overflow-x:auto}
-.req-body.show{display:block}
-.req-table{width:100%;border-collapse:collapse;min-width:600px;font-size:11px}
-.req-table th{background:#f8f9fa;color:#666;font-weight:500;padding:8px 10px;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}
-.req-table td{padding:8px 10px;border-bottom:1px solid #f0f0f0;color:#444;white-space:nowrap}
-.req-table .req-no{width:36px;text-align:center;color:#999}
-.req-table .req-name{font-weight:500;color:#333}
-.req-table .result-tag{display:inline-block;padding:1px 6px;border-radius:8px;background:#f0f9eb;color:#52c41a;font-size:10px;margin-right:3px}
+/* 空状态 */
+.empty-state{text-align:center;padding:60px 20px;color:#bbb;font-size:14px}
 
-.home-indicator{height:5px;width:134px;background:#999;border-radius:3px;margin:6px auto 10px}
+/* 需求清单卡片（手机壳外） */
+.requirements-wrap{width:375px;margin-top:8px}
+.requirements-toggle{width:100%;padding:12px 16px;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:pointer;user-select:none;font-size:14px;font-weight:600;color:#2c3345;text-align:left;display:flex;justify-content:space-between;align-items:center;border:1px solid #e8e8e8}
+.requirements-toggle .arrow{transition:transform .25s;font-size:12px;color:#999}
+.requirements-toggle.open .arrow{transform:rotate(180deg)}
+.req-table-wrap{display:none;background:#fff;border-radius:0 0 12px 12px;overflow-x:auto;border:1px solid #e8e8e8;border-top:0;margin-top:-1px}
+.req-table-wrap.show{display:block}
+.req-table{width:100%;min-width:480px;border-collapse:collapse;font-size:12px}
+.req-table th{background:#f7f8fa;color:#697488;padding:10px 12px;text-align:left;border-bottom:1px solid #edf0f4;white-space:nowrap}
+.req-table th:first-child,.req-table th:last-child{text-align:center}
+.req-table td{padding:8px 12px;border-bottom:1px solid #f5f5f5;color:#536075}
+.req-table td:first-child,.req-table td:last-child{text-align:center}
+.req-tag{display:inline-block;padding:2px 10px;border-radius:10px;background:#e6f7ff;color:#1677ff;font-size:11px}
 </style>
 </head>
 <body>
 
+<!-- 手机外壳 -->
 <div class="phone-shell">
-  <!-- Status Bar -->
-  <div class="status-bar">
-    <span class="time">9:41</span>
-    <div class="status-icons">
-      <span>􀋦</span><span>􀊨</span><span>􀊰</span>
+  <div class="phone-screen">
+    <div class="phone-notch"></div>
+
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <span class="status-icons">▮▮▮▮ ▊ WiFi ▋▋▋ 86%</span>
     </div>
-  </div>
 
-  <!-- Nav Bar -->
-  <div class="nav-bar">
-    <button class="nav-back" onclick="history.back()">&#8249;</button>
-    <span class="nav-title">客户管理</span>
-  </div>
-
-  <!-- Search -->
-  <div class="search-bar">
-    <div class="search-box">
-      <span class="search-icon">&#8995;</span>
-      <input type="text" id="searchInput" placeholder="搜索企业名称" oninput="applyFilters()">
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <a class="nav-back">&larr;</a>
+      <span class="nav-title">客户管理</span>
     </div>
-  </div>
 
-  <!-- Filter Tags -->
-  <div class="filter-tags" id="filterTags">
-    <button class="filter-tag active" data-filter="all" onclick="setFilter('all')">全部</button>
-    <button class="filter-tag" data-filter="一手单" onclick="setFilter('一手单')">一手单</button>
-    <button class="filter-tag" data-filter="二手单" onclick="setFilter('二手单')">二手单</button>
-  </div>
-
-  <!-- List Header -->
-  <div class="list-header">
-    <span class="count">共 <b id="listCount">3</b> 家企业</span>
-  </div>
-
-  <!-- Card List -->
-  <div class="card-list" id="cardList"></div>
-
-  <!-- Tab Bar -->
-  <div class="tab-bar">
-    <div class="tab-item"><span class="tab-icon">&#8962;</span>首页</div>
-    <div class="tab-item active"><span class="tab-icon">&#9638;</span>客户管理</div>
-    <div class="tab-item"><span class="tab-icon">&#9993;</span>消息</div>
-    <div class="tab-item"><span class="tab-icon">&#9735;</span>我的</div>
-  </div>
-
-  <!-- Detail Overlay -->
-  <div class="overlay" id="detailOverlay" onclick="closeDetail(event)">
-    <div class="drawer" id="detailDrawer" onclick="event.stopPropagation()">
-      <div class="drawer-handle"></div>
-      <div class="drawer-head">
-        <h3 id="detailCompany"></h3>
-        <div class="drawer-tags" id="detailTags"></div>
+    <!-- 搜索栏 -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">&#128269;</span>
+        <input class="search-input" placeholder="搜索企业名称" id="searchInput" oninput="applyFilters()">
       </div>
-      <div class="drawer-body" id="detailBody"></div>
-      <div class="home-indicator"></div>
+    </div>
+
+    <!-- 筛选标签 -->
+    <div class="filter-tags" id="filterTags">
+      <span class="filter-tag active" data-filter="all" onclick="setFilter('all',this)">全部</span>
+      <span class="filter-tag" data-filter="一手单" onclick="setFilter('orderType:一手单',this)">一手单</span>
+      <span class="filter-tag" data-filter="二手单" onclick="setFilter('orderType:二手单',this)">二手单</span>
+      <span class="filter-tag" data-filter="天津市" onclick="setFilter('province:天津市',this)">天津市</span>
+      <span class="filter-tag" data-filter="湖南省" onclick="setFilter('province:湖南省',this)">湖南省</span>
+      <span class="filter-tag" data-filter="浙江省" onclick="setFilter('province:浙江省',this)">浙江省</span>
+    </div>
+
+    <!-- 计数栏 -->
+    <div class="count-bar">共 <b id="companyCount">3</b> 家企业</div>
+
+    <!-- 列表 -->
+    <div class="list-scroll" id="listScroll"></div>
+
+    <!-- 底部 TabBar -->
+    <div class="tab-bar">
+      <a class="tab-item"><span class="tab-icon">&#127968;</span>首页</a>
+      <a class="tab-item active"><span class="tab-icon">&#128101;</span>客户管理</a>
+      <a class="tab-item"><span class="tab-icon">&#9993;</span>消息</a>
+      <a class="tab-item"><span class="tab-icon">&#128100;</span>我的</a>
     </div>
   </div>
 </div>
 
-<!-- Requirements Section -->
-<div class="req-section">
-  <button class="req-toggle" onclick="toggleReqs()">
-    需求清单 <span class="arrow">&#8964;</span>
-  </button>
-  <div class="req-body" id="reqBody">
+<!-- 详情弹窗 -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-sheet" id="detailSheet">
+    <div class="sheet-handle"></div>
+    <div class="detail-sheet-head">
+      <h3 id="detailTitle">企业详情</h3>
+      <button class="detail-close" onclick="closeDetail()">&times;</button>
+    </div>
+    <div class="detail-sheet-body" id="detailBody"></div>
+  </div>
+</div>
+
+<!-- 需求清单（手机壳外） -->
+<div class="requirements-wrap">
+  <div class="requirements-toggle" id="reqToggle" onclick="toggleRequirements()">
+    需求清单（共 9 项）<span class="arrow">&#9660;</span>
+  </div>
+  <div class="req-table-wrap" id="reqTableWrap">
     <table class="req-table">
-      <thead><tr><th>序号</th><th>功能名称</th><th>功能目的</th><th>处理结果</th></tr></thead>
+      <thead>
+        <tr><th>序号</th><th>功能名称</th><th>功能目的</th><th>处理结果</th></tr>
+      </thead>
       <tbody>
-        <tr><td class="req-no">1</td><td class="req-name">替换客户列表表头</td><td>将现有客户列表字段替换为客户提供的完整字段</td><td><span class="result-tag">&#10003;</span>完整展示40个字段</td></tr>
-        <tr><td class="req-no">2</td><td class="req-name">自定义字段应用于添加企业</td><td>用户新增自定义字段同步进入添加企业区域</td><td><span class="result-tag">&#10003;</span>同步写入</td></tr>
-        <tr><td class="req-no">3</td><td class="req-name">支持编辑字段</td><td>系统预设和自定义字段均支持修改显示名称</td><td><span class="result-tag">&#10003;</span>各端同步</td></tr>
-        <tr><td class="req-no">4</td><td class="req-name">拖拽调整字段排序</td><td>列表字段支持鼠标长按拖拽改变展示顺序</td><td><span class="result-tag">&#10003;</span>同步排序</td></tr>
-        <tr><td class="req-no">5</td><td class="req-name">各字段独立筛选</td><td>每个业务字段可按配置使用模糊查询或枚举筛选</td><td><span class="result-tag">&#10003;</span>组合筛选</td></tr>
-        <tr><td class="req-no">6</td><td class="req-name">新增企业管理</td><td>支持创建新企业，录入基础信息、招聘信息和合同信息</td><td><span class="result-tag">&#10003;</span>即时同步</td></tr>
-        <tr><td class="req-no">7</td><td class="req-name">合同管理</td><td>支持为企业添加合同，维护合同名称、编号、起止时间等</td><td><span class="result-tag">&#10003;</span>即时更新</td></tr>
-        <tr><td class="req-no">8</td><td class="req-name">移动端适配</td><td>小程序端支持横版表格查看、筛选和拖拽排序</td><td><span class="result-tag">&#10003;</span>数据一致</td></tr>
-        <tr><td class="req-no">9</td><td class="req-name">导出功能</td><td>支持将当前筛选后的客户数据导出为CSV文件</td><td><span class="result-tag">&#10003;</span>筛选一致</td></tr>
+        <tr><td>1</td><td>客户信息管理</td><td>统一管理客户基本信息、招聘需求与合同信息</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>2</td><td>招聘信息字段</td><td>支持40个业务字段，覆盖用工性质、岗位、薪资、食宿等维度</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>3</td><td>表格设置抽屉</td><td>自定义字段显隐与排序，适配不同岗位的关注维度</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>4</td><td>表头筛选与排序</td><td>按省市区、用工性质等枚举字段快速筛选客户</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>5</td><td>企业添加表单</td><td>分步填写基础信息、招聘信息和合同信息</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>6</td><td>合同管理</td><td>企业合同增删改，支持长期/固定期限合同</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>7</td><td>字典管理</td><td>统一维护枚举字段可选值，同步作用于 Web/Mob 端</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>8</td><td>移动端预览</td><td>小程序风格卡片列表，支持筛选、搜索、详情弹窗</td><td><span class="req-tag">已完成</span></td></tr>
+        <tr><td>9</td><td>数据导出</td><td>支持将筛选后的客户数据导出为 CSV 文件</td><td><span class="req-tag">已完成</span></td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
 <script>
-const systemFields = [
-  {id:'seq',label:'序号'},{id:'province',label:'省'},{id:'city',label:'市'},{id:'district',label:'县/区'},
-  {id:'town',label:'镇'},{id:'orderType',label:'一二手单'},{id:'company',label:'企业名称'},
-  {id:'interviewContact',label:'面试对接人名字+电话'},{id:'highlights',label:'企业亮点'},
-  {id:'demand',label:'近30天内需求人数'},{id:'environment',label:'工作环境'},
-  {id:'employmentType',label:'用工性质'},{id:'holidayWorker',label:'是否要寒暑假工'},
-  {id:'position',label:'招聘岗位'},{id:'gender',label:'性别要求'},{id:'age',label:'年龄要求'},
-  {id:'ethnicity',label:'民族'},{id:'household',label:'户籍要求'},{id:'documents',label:'证件要求'},
-  {id:'education',label:'学历要求'},{id:'hardRequirements',label:'其他硬性要求'},
-  {id:'jobContent',label:'工作内容'},{id:'workHours',label:'工作时间'},{id:'meal',label:'食宿'},
-  {id:'salary',label:'薪资待遇'},{id:'salaryDetail',label:'具体薪酬计算明细'},
-  {id:'subsidy',label:'其他和钱相关补贴'},{id:'settlement',label:'结算方式'},
-  {id:'payday',label:'发薪日'},{id:'payrollDesc',label:'发薪说明'},
-  {id:'workAddress',label:'工作地点'},{id:'interviewAddress',label:'面试地点'},
-  {id:'interviewDress',label:'面试携带/着装要求'},{id:'interviewTime',label:'面试时间'},
-  {id:'interviewProcess',label:'面试-入职流程'},{id:'onboardingMaterials',label:'入职材料/通知模板'},
-  {id:'onboardingFee',label:'入职费用'},{id:'keywords',label:'补充亮点关键词'}
+// ===== 字段定义（来自 systemFields，40字段）=====
+const fieldDefs = [
+  {id:'seq',label:'序号'},{id:'province',label:'省'},{id:'city',label:'市'},{id:'district',label:'县/区'},{id:'town',label:'镇'},
+  {id:'orderType',label:'一二手单'},{id:'company',label:'企业名称'},{id:'interviewContact',label:'面试对接人名字+电话'},
+  {id:'highlights',label:'企业亮点'},{id:'demand',label:'近30天内需求人数'},{id:'environment',label:'工作环境'},
+  {id:'employmentType',label:'用工性质'},{id:'holidayWorker',label:'是否要寒暑假工'},{id:'position',label:'招聘岗位'},
+  {id:'gender',label:'性别要求'},{id:'age',label:'年龄要求'},{id:'ethnicity',label:'民族'},{id:'household',label:'户籍要求'},
+  {id:'documents',label:'证件要求'},{id:'education',label:'学历要求'},{id:'hardRequirements',label:'其他硬性要求'},
+  {id:'jobContent',label:'工作内容'},{id:'workHours',label:'工作时间'},{id:'meal',label:'食宿'},{id:'salary',label:'薪资待遇'},
+  {id:'salaryDetail',label:'具体薪酬计算明细'},{id:'subsidy',label:'其他和钱相关补贴'},{id:'settlement',label:'结算方式'},
+  {id:'payday',label:'发薪日'},{id:'payrollDesc',label:'发薪说明'},{id:'workAddress',label:'工作地点'},
+  {id:'interviewAddress',label:'面试地点'},{id:'interviewDress',label:'面试携带/着装要求'},
+  {id:'interviewTime',label:'面试时间'},{id:'interviewProcess',label:'面试-入职流程'},
+  {id:'onboardingMaterials',label:'入职材料/通知模板'},{id:'onboardingFee',label:'入职费用'},
+  {id:'keywords',label:'补充亮点关键词'}
 ];
 
-const seedData = [
-  {seq:'1',province:'天津市',city:'天津市',district:'津南区',town:'海河教育园',orderType:'一手单',company:'天津六合时利和电子有限公司',interviewContact:'李经理 15620433222',highlights:'恒温车间、管理规范',demand:'30人',environment:'空调车间，坐班为主',employmentType:'正式工',holidayWorker:'否',position:'操作员 / 质检员',gender:'男女不限',age:'20–45岁',ethnicity:'不限',household:'不限',documents:'身份证原件',education:'初中及以上',hardRequirements:'无大面积纹身',jobContent:'电子零部件组装与质检',workHours:'两班倒，月休4天',meal:'包住 / 餐补',salary:'5500–7500元',salaryDetail:'底薪+加班费+绩效',subsidy:'夜班补贴20元/天',settlement:'月结',payday:'每月15日',payrollDesc:'银行卡发薪',workAddress:'海河教育园区雅深路8号',interviewAddress:'企业南门招聘中心',interviewDress:'身份证、黑色水笔；着装整洁',interviewTime:'工作日 9:00–17:00',interviewProcess:'面试→体检→培训→上岗',onboardingMaterials:'身份证复印件2张、照片4张',onboardingFee:'体检费100元',keywords:'晋升快、留任奖'},
-  {seq:'2',province:'湖南省',city:'湘潭市',district:'雨湖区',town:'九华街道',orderType:'一手单',company:'湖南吉利汽车部件有限公司',interviewContact:'梁经理 138****2186',highlights:'大型汽车集团、订单稳定',demand:'50人',environment:'自动化生产线',employmentType:'派遣工',holidayWorker:'否',position:'装配工 / 质检',gender:'男',age:'18–45岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'初中及以上',hardRequirements:'能适应倒班',jobContent:'汽车零部件装配',workHours:'8:00–20:00 两班倒',meal:'包吃住',salary:'6000–8500元',salaryDetail:'计时工资+加班费',subsidy:'满勤奖300元',settlement:'月结',payday:'每月20日',payrollDesc:'遇节假日顺延',workAddress:'雨湖区吉利西路',interviewAddress:'吉利西路公交站集合',interviewDress:'携带身份证',interviewTime:'周一至周五',interviewProcess:'集合→面试→体检→入职',onboardingMaterials:'身份证、银行卡',onboardingFee:'无',keywords:'包吃住、工作稳定'},
-  {seq:'3',province:'浙江省',city:'台州市',district:'黄岩区',town:'院桥镇',orderType:'二手单',company:'台州爱玛机车制造有限公司',interviewContact:'姬经理 189****7042',highlights:'知名品牌、宿舍条件好',demand:'20人',environment:'标准化车间',employmentType:'派遣工',holidayWorker:'是',position:'普工 / 仓管',gender:'男女不限',age:'18–48岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'不限',hardRequirements:'识字，会写姓名',jobContent:'电动车零部件生产',workHours:'长白班为主',meal:'工作餐 / 宿舍',salary:'6500–9000元',salaryDetail:'计件工资，多劳多得',subsidy:'高温补贴、工龄奖',settlement:'月结',payday:'每月18日',payrollDesc:'企业统一发薪',workAddress:'黄岩区院桥镇',interviewAddress:'厂区一号门',interviewDress:'运动鞋、长裤',interviewTime:'每周二、四',interviewProcess:'面试→分配岗位→入职',onboardingMaterials:'身份证、1寸照片',onboardingFee:'无',keywords:'长白班、可接受暑假工'}
+// ===== 客户数据（seedData，3条）=====
+const customers = [
+  {seq:'1',province:'天津市',city:'天津市',district:'津南区',town:'海河教育园',orderType:'一手单',company:'天津六合时利和电子有限公司',
+   interviewContact:'李经理 15620433222',highlights:'恒温车间、管理规范',demand:'30人',environment:'空调车间，坐班为主',
+   employmentType:'正式工',holidayWorker:'否',position:'操作员 / 质检员',gender:'男女不限',age:'20–45岁',ethnicity:'不限',
+   household:'不限',documents:'身份证原件',education:'初中及以上',hardRequirements:'无大面积纹身',jobContent:'电子零部件组装与质检',
+   workHours:'两班倒，月休4天',meal:'包住 / 餐补',salary:'5500–7500元',salaryDetail:'底薪+加班费+绩效',subsidy:'夜班补贴20元/天',
+   settlement:'月结',payday:'每月15日',payrollDesc:'银行卡发薪',workAddress:'海河教育园区雅深路8号',interviewAddress:'企业南门招聘中心',
+   interviewDress:'身份证、黑色水笔；着装整洁',interviewTime:'工作日 9:00–17:00',interviewProcess:'面试→体检→培训→上岗',
+   onboardingMaterials:'身份证复印件2张、照片4张',onboardingFee:'体检费100元',keywords:'晋升快、留任奖'},
+  {seq:'2',province:'湖南省',city:'湘潭市',district:'雨湖区',town:'九华街道',orderType:'一手单',company:'湖南吉利汽车部件有限公司',
+   interviewContact:'梁经理 138****2186',highlights:'大型汽车集团、订单稳定',demand:'50人',environment:'自动化生产线',
+   employmentType:'派遣工',holidayWorker:'否',position:'装配工 / 质检',gender:'男',age:'18–45岁',ethnicity:'不限',
+   household:'不限',documents:'身份证',education:'初中及以上',hardRequirements:'能适应倒班',jobContent:'汽车零部件装配',
+   workHours:'8:00–20:00 两班倒',meal:'包吃住',salary:'6000–8500元',salaryDetail:'计时工资+加班费',subsidy:'满勤奖300元',
+   settlement:'月结',payday:'每月20日',payrollDesc:'遇节假日顺延',workAddress:'雨湖区吉利西路',interviewAddress:'吉利西路公交站集合',
+   interviewDress:'携带身份证',interviewTime:'周一至周五',interviewProcess:'集合→面试→体检→入职',
+   onboardingMaterials:'身份证、银行卡',onboardingFee:'无',keywords:'包吃住、工作稳定'},
+  {seq:'3',province:'浙江省',city:'台州市',district:'黄岩区',town:'院桥镇',orderType:'二手单',company:'台州爱玛机车制造有限公司',
+   interviewContact:'姬经理 189****7042',highlights:'知名品牌、宿舍条件好',demand:'20人',environment:'标准化车间',
+   employmentType:'派遣工',holidayWorker:'是',position:'普工 / 仓管',gender:'男女不限',age:'18–48岁',ethnicity:'不限',
+   household:'不限',documents:'身份证',education:'不限',hardRequirements:'识字，会写姓名',jobContent:'电动车零部件生产',
+   workHours:'长白班为主',meal:'工作餐 / 宿舍',salary:'6500–9000元',salaryDetail:'计件工资，多劳多得',subsidy:'高温补贴、工龄奖',
+   settlement:'月结',payday:'每月18日',payrollDesc:'企业统一发薪',workAddress:'黄岩区院桥镇',interviewAddress:'厂区一号门',
+   interviewDress:'运动鞋、长裤',interviewTime:'每周二、四',interviewProcess:'面试→分配岗位→入职',
+   onboardingMaterials:'身份证、1寸照片',onboardingFee:'无',keywords:'长白班、可接受暑假工'}
 ];
 
-// Dynamic province filter tags
-const provinces = [...new Set(seedData.map(function(d){return d.province}))];
-var filterTagsEl = document.getElementById('filterTags');
-provinces.forEach(function(prov){
-  var btn = document.createElement('button');
-  btn.className = 'filter-tag';
-  btn.setAttribute('data-filter', prov);
-  btn.textContent = prov;
-  btn.onclick = function(){setFilter(prov);};
-  filterTagsEl.appendChild(btn);
-});
+// ===== 状态 =====
+let currentFilter = 'all';
 
-var currentFilter = 'all';
-
-function getFilteredData(){
-  var search = document.getElementById('searchInput').value.trim().toLowerCase();
-  return seedData.filter(function(item){
-    if(search && item.company.toLowerCase().indexOf(search) === -1) return false;
-    if(currentFilter === 'all') return true;
-    if(currentFilter === '一手单' || currentFilter === '二手单'){
-      return item.orderType === currentFilter;
-    }
-    return item.province === currentFilter;
-  });
-}
-
-function setFilter(filter){
-  currentFilter = filter;
-  var tags = document.querySelectorAll('.filter-tag');
-  for(var i=0;i<tags.length;i++){
-    if(tags[i].getAttribute('data-filter') === filter){
-      tags[i].classList.add('active');
-    } else {
-      tags[i].classList.remove('active');
-    }
-  }
-  document.getElementById('searchInput').value = '';
-  applyFilters();
-}
-
+// ===== 筛选逻辑 =====
 function applyFilters(){
-  var filtered = getFilteredData();
-  document.getElementById('listCount').textContent = filtered.length;
+  const keyword = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  let filtered = customers;
+
+  if(currentFilter !== 'all'){
+    const [field, val] = currentFilter.split(':');
+    filtered = filtered.filter(c => c[field] === val);
+  }
+
+  if(keyword){
+    filtered = filtered.filter(c => c.company.toLowerCase().includes(keyword));
+  }
+
   renderCards(filtered);
 }
 
-function renderCards(data){
-  var container = document.getElementById('cardList');
-  if(!data.length){
-    container.innerHTML = '<div class="empty-state">暂无匹配的客户</div>';
+function setFilter(filterVal, el){
+  currentFilter = filterVal;
+  document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+// ===== 渲染卡片 =====
+function renderCards(list){
+  document.getElementById('companyCount').textContent = list.length;
+  const container = document.getElementById('listScroll');
+
+  if(!list.length){
+    container.innerHTML = '<div class="empty-state">没有符合条件的企业</div>';
     return;
   }
-  var html = '';
-  for(var i=0;i<data.length;i++){
-    var item = data[i];
-    html += '<div class="card" onclick="openDetail(\''+ escAttr(item.company) +'\')">';
-    html += '<div class="card-company">'+ esc(item.company) +'</div>';
-    html += '<div class="card-tags">';
-    html += '<span class="card-tag'+ (item.orderType==='二手单'?' order-type-2':'') +'">'+ esc(item.orderType) +'</span>';
-    html += '<span class="card-tag">'+ esc(item.employmentType) +'</span>';
-    if(item.holidayWorker==='是') html += '<span class="card-tag">寒暑假工</span>';
-    html += '<span class="card-tag">'+ esc(item.keywords) +'</span>';
-    html += '</div>';
-    html += '<div class="card-info">';
-    html += '<span>'+ esc(item.position) +'</span>';
-    html += '<span>需求 '+ esc(item.demand) +'</span>';
-    html += '<span class="salary-highlight">'+ esc(item.salary) +'</span>';
-    html += '</div>';
-    html += '<div class="card-addr">'+ esc(item.province) +' '+ esc(item.city) +' '+ esc(item.district) +' '+ esc(item.town) +'</div>';
-    html += '<div class="card-actions">';
-    html += '<button class="card-btn" onclick="event.stopPropagation();openDetail(\''+ escAttr(item.company) +'\')">查看详情</button>';
-    html += '<button class="card-btn" onclick="event.stopPropagation()">拨打联系</button>';
-    html += '</div></div>';
-  }
-  container.innerHTML = html;
+
+  container.innerHTML = list.map(c => {
+    const tags = [];
+    tags.push(`<span class="card-tag ${c.orderType==='二手单'?'is-second':''}">${html(c.orderType)}</span>`);
+    if(c.employmentType) tags.push(`<span class="card-tag">${html(c.employmentType)}</span>`);
+    if(c.holidayWorker) tags.push(`<span class="card-tag is-holiday">${html(c.holidayWorker)==='是'?'寒暑假工':'非寒暑假工'}</span>`);
+    if(c.keywords) {
+      c.keywords.split('、').slice(0,2).forEach(k => { if(k.trim()) tags.push(`<span class="card-tag">${html(k.trim())}</span>`); });
+    }
+
+    const addr = [c.province, c.city, c.district, c.town].filter(v => v && v !== '—').join('');
+
+    return `
+      <div class="card" onclick="showDetail('${c.company}')">
+        <div class="card-company">${html(c.company)}</div>
+        <div class="card-tags">${tags.join('')}</div>
+        <div class="card-info">
+          <span>${html(c.position||'—')}</span>
+          <span>需求 ${html(c.demand||'—')}</span>
+          <span class="salary">${html(c.salary||'—')}</span>
+        </div>
+        <div class="card-addr"><span class="card-addr-icon">&#128205;</span>${html(addr)}</div>
+        <div class="card-actions">
+          <button class="card-btn card-btn-detail" onclick="event.stopPropagation();showDetail('${c.company}')">&#128269; 查看详情</button>
+          <button class="card-btn card-btn-call" onclick="event.stopPropagation();callContact('${html(c.interviewContact||'')}')">&#128222; 拨打联系</button>
+        </div>
+      </div>`;
+  }).join('');
 }
 
-var detailFieldOrder = [
-  'seq','orderType','employmentType','holidayWorker','highlights','demand','environment',
-  'position','gender','age','ethnicity','household','documents','education','hardRequirements',
-  'jobContent','workHours','meal','salary','salaryDetail','subsidy','settlement','payday',
-  'payrollDesc','workAddress','interviewContact','interviewAddress','interviewDress',
-  'interviewTime','interviewProcess','onboardingMaterials','onboardingFee','keywords'
-];
+// ===== 详情弹窗 =====
+function showDetail(companyName){
+  const c = customers.find(x => x.company === companyName);
+  if(!c) return;
 
-function openDetail(company){
-  var item = null;
-  for(var i=0;i<seedData.length;i++){
-    if(seedData[i].company === company){item=seedData[i];break;}
-  }
-  if(!item) return;
-  document.getElementById('detailCompany').textContent = item.company;
-  var tagsEl = document.getElementById('detailTags');
-  tagsEl.innerHTML = '<span class="card-tag'+ (item.orderType==='二手单'?' order-type-2':'') +'">'+ esc(item.orderType) +'</span>' +
-    '<span class="card-tag">'+ esc(item.employmentType) +'</span>' +
-    (item.holidayWorker==='是'?'<span class="card-tag">寒暑假工</span>':'');
+  document.getElementById('detailTitle').textContent = c.company;
+  document.getElementById('detailBody').innerHTML = fieldDefs
+    .filter(f => f.id !== 'seq')
+    .map(f => {
+      const val = c[f.id] || '—';
+      return `<div class="detail-field"><span class="detail-label">${html(f.label)}</span><span class="detail-value">${html(val)}</span></div>`;
+    }).join('');
 
-  var labelMap = {};
-  for(var i=0;i<systemFields.length;i++){
-    labelMap[systemFields[i].id] = systemFields[i].label;
-  }
-  var bodyHtml = '';
-  for(var i=0;i<detailFieldOrder.length;i++){
-    var id = detailFieldOrder[i];
-    var value = item[id];
-    if(!value || value==='—') continue;
-    bodyHtml += '<div class="drawer-field"><span class="drawer-label">'+ esc(labelMap[id]||id) +'</span><span class="drawer-value">'+ esc(value) +'</span></div>';
-  }
-  document.getElementById('detailBody').innerHTML = bodyHtml;
   document.getElementById('detailOverlay').classList.add('show');
-  setTimeout(function(){
-    document.getElementById('detailDrawer').classList.add('show');
-  }, 10);
 }
 
-function closeDetail(e){
-  if(e && e.target !== document.getElementById('detailOverlay')) return;
-  document.getElementById('detailDrawer').classList.remove('show');
-  setTimeout(function(){
-    document.getElementById('detailOverlay').classList.remove('show');
-  }, 280);
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('show');
 }
 
-function toggleReqs(){
-  document.getElementById('reqBody').classList.toggle('show');
-  document.querySelector('.req-toggle').classList.toggle('open');
+// ===== 拨打联系 =====
+function callContact(contactStr){
+  const phone = (contactStr||'').replace(/[^\d]/g,'').replace(/.*?(\d{11}).*/,'$1');
+  if(/^\d{11}$/.test(phone)){
+    alert('拨打：' + phone);
+  } else {
+    alert('联系人信息：' + contactStr);
+  }
 }
 
-function esc(str){
-  var div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-function escAttr(str){
-  return String(str).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+// ===== 需求清单折叠 =====
+function toggleRequirements(){
+  document.getElementById('reqTableWrap').classList.toggle('show');
+  document.getElementById('reqToggle').classList.toggle('open');
 }
 
-renderCards(seedData);
+// ===== 工具函数 =====
+function html(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ===== 初始化 =====
+renderCards(customers);
 </script>
+
 </body>
 </html>
