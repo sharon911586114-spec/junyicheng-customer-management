@@ -1,232 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>客户管理 · Mob端</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;min-height:100vh}
-
-    /* 顶部导航栏 */
-    .nav-bar{background:#1677ff;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;position:sticky;top:0;z-index:100}
-    .nav-bar .nav-left{color:#fff;font-size:20px;cursor:pointer;width:36px}
-    .nav-bar .nav-title{color:#fff;font-size:17px;font-weight:700}
-    .nav-bar .nav-right .web-btn{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:6px;padding:6px 12px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
-
-    /* 逻辑批注提示条 */
-    .annotation-bar{background:#fff9e6;border:1px solid #f5a000;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;font-size:13px}
-    .annotation-bar.hidden{display:none}
-    .annotation-bar .anno-left{display:flex;flex-direction:column}
-    .annotation-bar .anno-title{font-weight:700;color:#333}
-    .annotation-bar .anno-desc{color:#999;font-size:11px}
-    .annotation-bar .anno-close{background:#1677ff;color:#fff;border:0;border-radius:4px;padding:4px 14px;font-size:12px;cursor:pointer}
-
-    /* 搜索栏 */
-    .search-bar{padding:10px 14px;background:#fff}
-    .search-bar input{width:100%;height:40px;border:1px solid #e5e7eb;border-radius:8px;padding:0 14px;font-size:14px;color:#333;outline:none;background:#fff}
-    .search-bar input::placeholder{color:#9ca3af}
-    .search-bar input:focus{border-color:#1677ff}
-
-    /* 表格区域 */
-    .table-section{background:#fff;margin:0}
-    .table-header-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 0}
-    .table-header-bar .enterprise-count{font-size:13px;color:#4b5563}
-    .table-header-bar .enterprise-count b{color:#1677ff;font-weight:600}
-
-    .data-table{width:100%;border-collapse:collapse}
-    .data-table thead th{background:#f3f4f6;color:#6b7280;font-size:13px;font-weight:500;padding:10px 10px;text-align:left;border-bottom:1px solid #e5e7eb;white-space:nowrap}
-    .data-table thead th.col-seq{text-align:center;width:60px}
-    .data-table thead th .th-content{display:inline-flex;align-items:center;gap:4px}
-    .data-table thead th .th-grip{color:#c5c9d2;font-size:12px}
-    .data-table thead th .th-arrow{color:#9ca3af;font-size:10px;cursor:pointer}
-    .data-table thead th .th-anno{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#f5a000;color:#fff;font-size:9px;font-weight:700;margin-left:2px;cursor:pointer}
-    .data-table tbody td{padding:14px 10px;font-size:14px;color:#333;border-bottom:1px solid #f3f4f6;text-align:left}
-    .data-table tbody td.col-seq{text-align:center;color:#666}
-    .data-table tbody tr:last-child td{border-bottom:0}
-    .data-table tbody tr:hover{background:#f9fafb}
-
-    /* 下拉筛选面板 */
-    .sort-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200}
-    .sort-overlay.show{display:block}
-    .sort-sheet{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:16px 16px 0 0;padding:16px 0 24px;z-index:201;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
-    .sort-sheet .sheet-title{font-size:15px;font-weight:600;color:#333;padding:0 16px 12px;border-bottom:1px solid #f0f0f0}
-    .sort-sheet .sheet-option{padding:14px 16px;font-size:15px;color:#333;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
-    .sort-sheet .sheet-option:active{background:#f5f5f5}
-    .sort-sheet .sheet-option.selected{color:#1677ff}
-    .sort-sheet .sheet-option.selected::after{content:'✓';color:#1677ff}
-    .sort-sheet .sheet-cancel{padding:14px 16px;font-size:15px;color:#999;text-align:center;cursor:pointer;border-top:6px solid #f5f5f5;margin-top:8px}
-
-    /* FAB */
-    .fab-wrap{position:fixed;bottom:32px;right:24px;z-index:90;display:flex;flex-direction:column;align-items:center;gap:6px}
-    .fab{width:64px;height:64px;border-radius:50%;background:#1677ff;color:#fff;border:0;font-size:32px;cursor:pointer;box-shadow:0 4px 14px rgba(22,119,255,.4);display:flex;align-items:center;justify-content:center;line-height:1;transition:box-shadow .2s}
-    .fab:active{box-shadow:0 2px 8px rgba(22,119,255,.3)}
-    .fab-label{color:#666;font-size:12px}
-
-    /* Toast */
-    .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:999;opacity:0;pointer-events:none;transition:opacity .3s}
-    .toast.show{opacity:1}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>客户管理｜Mob端原型</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef3f7;color:#303744;font:14px/1.45 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}button,input,select,textarea{font:inherit}.app{width:min(100%,430px);height:100vh;margin:auto;background:#f3f6f9;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 24px #31465f20}.nav{height:58px;background:#3698f5;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:none}.nav strong{font-size:16px}.nav button{border:0;background:#ffffff20;color:#fff;border-radius:18px;padding:7px 12px}.logic{margin:8px;padding:9px 10px;border:1px solid #ffd46a;border-radius:6px;background:#fff8e4;color:#76591f;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px}.logic b{display:block;color:#443923;font-size:12px}.logic button{border:0;border-radius:4px;padding:5px 8px;background:#1677ff;color:#fff;white-space:nowrap}.tools{display:flex;gap:6px;padding:8px;background:#fff;border-bottom:1px solid #e7ebf0}.search{flex:1;height:34px;border:1px solid #dbe2eb;border-radius:5px;padding:0 9px;min-width:0}.tools button{height:34px;border:1px solid #bed2f7;border-radius:5px;background:#fff;color:#1677ff;padding:0 8px}.tools .add{background:#1677ff;color:#fff}.summary{padding:6px 10px;color:#7f8998;background:#fff;font-size:11px;display:flex;justify-content:space-between}.wrap{flex:1;overflow:auto;padding:8px}.grid{border-collapse:separate;border-spacing:0;table-layout:fixed;background:#fff;border:1px solid #dfe5ed;border-radius:6px;overflow:hidden}.grid th,.grid td{width:130px;height:44px;padding:8px 10px;border-right:1px solid #edf0f4;border-bottom:1px solid #e7ebf0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;background:#fff}.grid th{height:40px;position:sticky;top:0;z-index:4;padding-right:30px;background:#f5f6f8;color:#778292;cursor:grab}.grid th:first-child,.grid td:first-child{position:sticky;left:0;width:58px;z-index:3;background:#fff}.grid th:first-child{z-index:6;background:#f5f6f8}.grid th:last-child,.grid td:last-child{position:sticky;right:0;width:112px;z-index:3;background:#fff;box-shadow:-4px 0 8px #344c7014}.grid th:last-child{z-index:6;background:#f5f6f8}.filter{position:absolute;right:4px;top:8px;width:23px;height:23px;border:0;border-radius:4px;background:transparent;color:#8490a1}.filter.on{background:#dfecff;color:#1677ff}.dragging{opacity:.55}.over{box-shadow:inset 3px 0 #1677ff}.company{color:#1677ff;font-weight:600}.ops{color:#1677ff}.marker{position:absolute;right:-3px;top:-8px;width:20px;height:20px;border:2px solid #fff;border-radius:50%;background:#f5a000;color:#fff;font-size:10px;line-height:16px;text-align:center;z-index:8}.logic-off .marker,.logic-off .logic{display:none}.open-logic{display:none}.logic-off .open-logic{display:inline-block}.pop,.sheet{display:none;position:fixed;z-index:30;background:#fff}.pop.show,.sheet.show{display:block}.pop{width:270px;padding:13px;border:1px solid #dbe2eb;border-radius:8px;box-shadow:0 12px 30px #20355230}.pop h4{margin:0 0 10px}.pop input,.pop select{width:100%;height:36px;margin-bottom:8px;border:1px solid #dbe2eb;border-radius:5px;padding:0 8px}.enum{max-height:180px;overflow:auto;border:1px solid #e3e7ed;margin-bottom:8px}.enum label{display:block;padding:7px}.enum input{width:auto;height:auto;margin:0 7px 0 0}.pop .foot{text-align:right}.pop button,.sheet button{height:32px;border:1px solid #dbe2eb;border-radius:5px;background:#fff;margin-left:6px}.pop .primary{background:#1677ff;color:#fff}.mask{display:none;position:fixed;inset:0;background:#1d2c4860;z-index:40}.mask.show{display:block}.sheet{inset:auto 0 0;margin:auto;width:min(100%,430px);max-height:88vh;overflow:auto;border-radius:14px 14px 0 0;padding-bottom:20px;z-index:41}.sheet-head{position:sticky;top:0;background:#fff;padding:15px;border-bottom:1px solid #e8ecf2;display:flex;justify-content:space-between;z-index:2}.sheet-head h3{margin:0}.sheet-head button{border:0;font-size:20px}.notes{list-style:none;padding:12px;margin:0}.notes li{position:relative;margin-bottom:10px;padding:12px 12px 12px 44px;border:1px solid #e4e9ef;border-radius:7px}.notes li.active{border-color:#f5a000;background:#fffaf0}.no{position:absolute;left:12px;top:12px;width:22px;height:22px;border-radius:50%;background:#f5a000;color:#fff;text-align:center;line-height:22px}.setting-row{display:flex;align-items:center;gap:7px;margin:0 12px;padding:10px 4px;border-bottom:1px solid #edf0f4}.setting-row .grip{color:#9da8b7}.setting-row b{flex:1}.setting-row input{width:16px}.setting-row button{margin:0;padding:0 6px;color:#1677ff}.tip{margin:12px;padding:10px;background:#eef5ff;color:#54739f;border-radius:6px;font-size:12px}.setting-actions{display:flex;gap:8px;padding:0 12px}.setting-actions button{flex:1;margin:0;color:#1677ff}.sheet-form{padding:12px}.sheet-form h4{margin:14px 0 8px;color:#1677ff;border-bottom:1px solid #e8ecf2;padding-bottom:7px}.sheet-form label{display:block;margin-bottom:11px;color:#5e6978}.sheet-form input,.sheet-form select,.sheet-form textarea{width:100%;margin-top:5px;border:1px solid #dbe2eb;border-radius:5px;padding:0 9px}.sheet-form input,.sheet-form select{height:36px}.sheet-form textarea{min-height:76px;padding-top:8px}.mini-map{height:110px;margin-bottom:10px;border:1px solid #d8e2ed;border-radius:6px;background:#eaf5e6;display:grid;place-items:center;color:#348ee5}.upload-strip{display:flex;gap:8px}.upload{width:82px;height:66px;border:1px dashed #cbd5e1;border-radius:5px;display:grid;place-items:center;color:#929dab}.save-add{position:sticky;bottom:0;width:calc(100% - 24px);margin:12px!important;background:#1677ff!important;color:#fff!important}
+.mob-add-tabs{position:sticky;top:53px;z-index:1;display:flex;background:#fff;border-bottom:1px solid #e8ecf2}.mob-add-tabs button{flex:1;height:42px;border:0;border-bottom:2px solid transparent;background:#fff;color:#687385}.mob-add-tabs button.active{color:#1677ff;border-bottom-color:#1677ff}.mob-add-panel{display:none}.mob-add-panel.active{display:block}.media-tip{font-size:12px;line-height:1.6;color:#7a8492;margin:5px 0 8px}.video-box{width:100%;height:112px;border:1px dashed #cbd5e1;border-radius:5px;display:grid;place-items:center;text-align:center;color:#929dab}.contract-reminders{display:flex;flex-wrap:wrap;gap:6px 14px}.contract-reminders label{display:flex;align-items:center;gap:4px;margin:0}.contract-reminders input{width:16px;height:16px;margin:0}.date-pair{display:flex;gap:6px;align-items:center}.contract-upload{height:100px;border:1px dashed #cbd5e1;border-radius:5px;display:grid;place-items:center;text-align:center;color:#929dab}.contract-hint-mob{font-size:12px;color:#7a8492;margin-top:-5px}.marker.selected{box-shadow:0 0 0 4px #f5a00050}.mob-field-caption{position:relative;display:inline-block;padding-right:28px}.mob-field-caption .marker{right:0;top:-4px}.ops button{border:0;background:transparent;color:#1677ff;padding:0 4px;font-size:12px}.dict-mobile-nav{display:flex;gap:6px;overflow:auto;padding:10px}.dict-mobile-nav button{white-space:nowrap;border:1px solid #dce2eb;background:#fff}.dict-mobile-nav button.active{background:#1677ff;color:#fff}.dict-mobile-row{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:11px 12px;border-bottom:1px solid #edf0f4}.dict-mobile-row button{border:0;color:#1677ff;padding:0 4px}.mob-logic-card{display:none;position:fixed;z-index:70;inset:72px 10px 12px;margin:auto;width:min(calc(100% - 20px),410px);overflow:auto;border:1px solid #e6b515;border-radius:12px;background:#ffd43b;box-shadow:0 16px 38px #4c3b0f45;padding:15px}.mob-logic-card.show{display:block}.mob-logic-head{display:flex;justify-content:space-between;align-items:flex-start}.mob-logic-index{display:flex;gap:7px;align-items:center;color:#745600;font-size:11px}.mob-logic-index b{display:grid;place-items:center;width:23px;height:23px;border-radius:4px;background:#e7b600}.mob-logic-card h3{margin:5px 0 14px}.mob-logic-close{width:28px;height:28px;border:0;border-radius:50%;background:#d9ad19;font-size:18px}.mob-logic-content{background:#fffdf5;border-radius:8px;padding:14px;color:#505866;line-height:1.7}.mob-logic-content h4{margin:0 0 6px;color:#805d00}.mob-logic-content ul{padding-left:19px}.mob-logic-tag{display:inline-block;padding:3px 9px;margin-bottom:12px;border-radius:12px;background:#fff1ad;color:#765600;font-size:11px}
+.tools{display:block;padding:10px}.tools .search{display:block;width:100%;height:40px}.floating-add{position:fixed;right:max(18px,calc((100vw - 430px)/2 + 18px));bottom:24px;z-index:25;width:62px;height:62px;border:0;border-radius:50%;background:#1677ff;color:#fff;box-shadow:0 8px 22px #1677ff66;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none}.floating-add:active{cursor:grabbing;transform:scale(.98)}.floating-add b{font-size:22px;line-height:20px}.floating-add small{font-size:10px;white-space:nowrap}.mob-logic-card{z-index:160;inset:10px;margin:auto;width:min(calc(100% - 20px),410px);max-height:calc(100vh - 20px);padding:15px;overscroll-behavior:contain}.mob-logic-head{position:sticky;top:-15px;z-index:2;margin:-15px -15px 12px;padding:15px;background:#ffd43b;border-radius:12px 12px 0 0}.mob-logic-card h3{margin-bottom:0}.mob-logic-content{min-height:calc(100% - 78px);padding-bottom:28px}
+.summary{justify-content:flex-end}.mob-add-tabs button{position:relative}.mob-logic-card{z-index:9999;left:8px;right:8px;top:8px;bottom:8px;inset:8px;width:auto;max-width:none;max-height:none;overflow-y:auto;overflow-x:hidden;word-break:break-word;white-space:normal;-webkit-overflow-scrolling:touch}.mob-logic-card.show{display:block}.mob-logic-content{min-height:0;overflow:visible;white-space:normal;word-break:break-word;font-size:14px;line-height:1.8}
+.grid th .marker{top:2px;right:29px;width:19px;height:19px;line-height:15px}.grid th:first-child .marker{left:4px;right:auto}.mob-logic-card{left:50%;right:auto;top:8px;bottom:auto;inset:8px auto auto 50%;transform:translateX(-50%);width:min(calc(100vw - 16px),414px);max-width:414px;max-height:calc(100vh - 16px);height:auto;overflow-y:auto;overflow-x:hidden;border-radius:12px}.mob-logic-head{position:sticky;top:-15px}.mob-logic-content{overflow:visible;white-space:normal;overflow-wrap:anywhere}
+</style>
 </head>
-<body>
-  <!-- 顶部导航栏 -->
-  <div class="nav-bar">
-    <span class="nav-left" onclick="history.back()">←</span>
-    <span class="nav-title">客户管理 · Mob端</span>
-    <span class="nav-right">
-      <button class="web-btn" onclick="location.href='../web/index.html'">Web ↗</button>
-    </span>
-  </div>
-
-  <!-- 逻辑批注提示条 -->
-  <div class="annotation-bar" id="annotationBar">
-    <div class="anno-left">
-      <span class="anno-title">逻辑批注</span>
-      <span class="anno-desc">点击橙色编号查看对应需求规则</span>
-    </div>
-    <button class="anno-close" onclick="document.getElementById('annotationBar').classList.add('hidden')">关闭</button>
-  </div>
-
-  <!-- 搜索栏 -->
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="搜索企业名称、地区、岗位等信息" oninput="filterTable()">
-  </div>
-
-  <!-- 数据表格 -->
-  <div class="table-section">
-    <div class="table-header-bar">
-      <span></span>
-      <span class="enterprise-count">企业数：<b id="enterpriseCount">3</b>家</span>
-    </div>
-    <table class="data-table" id="dataTable">
-      <thead>
-        <tr>
-          <th class="col-seq">
-            <div class="th-content">
-              <span class="th-anno" onclick="showAnno(1)" title="需求规则 #1">①</span>
-            </div>
-          </th>
-          <th>
-            <div class="th-content">
-              <span class="th-grip">⋮⋮</span> 省
-              <span class="th-arrow" onclick="openSortSheet('province')">⌄</span>
-              <span class="th-anno" onclick="showAnno(4)" title="需求规则 #4">④</span>
-            </div>
-          </th>
-          <th>
-            <div class="th-content">
-              <span class="th-grip">⋮⋮</span> 市
-              <span class="th-arrow" onclick="openSortSheet('city')">⌄</span>
-            </div>
-          </th>
-          <th>
-            <div class="th-content">
-              <span class="th-grip">⋮⋮</span> 县/区
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-      </tbody>
-    </table>
-  </div>
-
-  <!-- FAB -->
-  <div class="fab-wrap">
-    <button class="fab" onclick="showToast('新增企业功能开发中')">＋</button>
-    <span class="fab-label">新增企业</span>
-  </div>
-
-  <!-- 排序筛选面板 -->
-  <div class="sort-overlay" id="sortOverlay" onclick="closeSortSheet()">
-    <div class="sort-sheet" onclick="event.stopPropagation()">
-      <div class="sheet-title" id="sortTitle">排序/筛选</div>
-      <div class="sheet-option" onclick="sortData('all')" id="optAll">全部</div>
-      <div id="sortOptionList"></div>
-      <div class="sheet-cancel" onclick="closeSortSheet()">取消</div>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const seedData = [
-      { seq: '1', province: '天津市',  city: '天津市', district: '津南区' },
-      { seq: '2', province: '湖南省',  city: '湘潭市', district: '雨湖区' },
-      { seq: '3', province: '浙江省',  city: '台州市', district: '黄岩区' },
-    ];
-
-    let currentSortField = '';
-    let filteredData = [...seedData];
-
-    function renderTable(data) {
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = data.map((row, i) => `
-        <tr>
-          <td class="col-seq">${i + 1}</td>
-          <td>${row.province}</td>
-          <td>${row.city}</td>
-          <td>${row.district}</td>
-        </tr>
-      `).join('');
-      document.getElementById('enterpriseCount').textContent = data.length;
-    }
-
-    function filterTable() {
-      const query = document.getElementById('searchInput').value.trim().toLowerCase();
-      if (!query) {
-        filteredData = [...seedData];
-      } else {
-        filteredData = seedData.filter(row =>
-          row.province.toLowerCase().includes(query) ||
-          row.city.toLowerCase().includes(query) ||
-          row.district.toLowerCase().includes(query)
-        );
-      }
-      renderTable(filteredData);
-    }
-
-    function openSortSheet(field) {
-      currentSortField = field;
-      document.getElementById('sortTitle').textContent = field === 'province' ? '省 - 排序/筛选' : '市 - 排序/筛选';
-      const values = [...new Set(seedData.map(r => r[field]))];
-      document.getElementById('sortOptionList').innerHTML =
-        '<div class="sheet-option selected" onclick="sortData(\'all\')">全部</div>' +
-        values.map(v => `<div class="sheet-option" onclick="sortData('${v}')">${v}</div>`).join('');
-      document.getElementById('sortOverlay').classList.add('show');
-    }
-
-    function sortData(value) {
-      if (value === 'all') {
-        filteredData = [...seedData].filter(r => {
-          const q = document.getElementById('searchInput').value.trim().toLowerCase();
-          return !q || r.province.toLowerCase().includes(q) || r.city.toLowerCase().includes(q) || r.district.toLowerCase().includes(q);
-        });
-      } else {
-        filteredData = seedData.filter(r => r[currentSortField] === value);
-      }
-      renderTable(filteredData);
-      closeSortSheet();
-    }
-
-    function closeSortSheet() {
-      document.getElementById('sortOverlay').classList.remove('show');
-    }
-
-    function showAnno(num) {
-      showToast(`需求规则 #${num}：点击橙色编号查看对应需求规则`);
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
-    }
-
-    // 初始渲染
-    renderTable(seedData);
-  </script>
-</body>
-</html>
+<body><div class="app" id="app">
+<header class="nav"><span>‹</span><strong>客户管理 · Mob端</strong><div><button class="open-logic" onclick="openLogic()">开启批注</button><button onclick="openWeb()">Web ↗</button></div></header>
+<div class="logic" id="logic"><div><b>逻辑批注</b>点击橙色编号查看对应需求规则</div><div><button onclick="closeLogic()">关闭</button></div></div>
+<div class="tools"><input class="search" id="search" placeholder="搜索企业名称、地区、岗位等信息" oninput="render()"></div>
+<div class="summary"><span>企业数：<b id="count">0</b>家</span></div>
+<main class="wrap" id="wrap"></main>
+<button class="floating-add" id="floatingAdd" aria-label="添加企业"><b>＋</b><small>新增企业</small></button>
+</div>
+<div class="pop" id="pop"><h4 id="popTitle">字段筛选</h4><div id="fuzzy"><select id="operator"><option value="contains">包含</option><option value="equals">等于</option><option value="notContains">不包含</option><option value="empty">为空</option><option value="notEmpty">不为空</option></select><input id="filterValue" placeholder="请输入筛选内容"></div><div class="enum" id="enum" style="display:none"></div><div class="foot"><button onclick="clearFilter()">清除</button><button class="primary" onclick="applyFilter()">确定</button></div></div>
+<div class="mask" id="mask" onclick="closeSheet()"></div><section class="sheet" id="sheet"><div class="sheet-head"><h3 id="sheetTitle">功能面板</h3><button onclick="closeSheet()">×</button></div><div id="sheetBody"></div></section>
+<aside class="mob-logic-card" id="mobLogicCard"><div class="mob-logic-head"><div><div class="mob-logic-index"><b id="mobLogicNo">1</b><span>客户管理 · 本次需求</span></div><h3 id="mobLogicTitle">功能说明</h3></div><button class="mob-logic-close" onclick="closeMobLogic()">×</button></div><div class="mob-logic-content" id="mobLogicContent"></div></aside>
+<script>
+const fieldPairs=[['seq','序号'],['province','省'],['city','市'],['district','县/区'],['town','镇'],['orderType','一二手单'],['company','企业名称'],['interviewContact','面试对接人名字+电话'],['highlights','企业亮点'],['demand','近30天内需求人数'],['environment','工作环境'],['employmentType','用工性质'],['holidayWorker','是否要寒暑假工'],['position','招聘岗位'],['gender','性别要求'],['age','年龄要求'],['ethnicity','民族'],['household','户籍要求'],['documents','证件要求'],['education','学历要求'],['hardRequirements','其他硬性要求'],['jobContent','工作内容'],['workHours','工作时间'],['meal','食宿'],['salary','薪资待遇'],['salaryDetail','具体薪酬计算明细'],['subsidy','其他和钱相关补贴'],['settlement','结算方式'],['payday','发薪日'],['payrollDesc','发薪说明'],['workAddress','工作地点'],['interviewAddress','面试地点'],['interviewDress','面试携带/着装要求'],['interviewTime','面试时间'],['interviewProcess','面试-入职流程'],['onboardingMaterials','入职材料/通知模板'],['onboardingFee','入职费用'],['keywords','补充亮点关键词'],['actions','操作']];
+const enums=new Set(['province','city','district','town','orderType','environment','employmentType','holidayWorker','gender','ethnicity','household','documents','education','workHours','meal','settlement','interviewTime']);let fields=fieldPairs.map(([id,label])=>({id,label,hidden:false,mode:enums.has(id)?'enum':'fuzzy'}));
+const rows=[{seq:'1',province:'天津市',city:'天津市',district:'津南区',town:'海河教育园',orderType:'一手单',company:'天津六合时利和电子有限公司',interviewContact:'李经理 15620433222',highlights:'恒温车间、管理规范',demand:'30人',environment:'空调车间',employmentType:'正式工',holidayWorker:'否',position:'操作员',gender:'男女不限',age:'20–45岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'初中及以上',hardRequirements:'无大面积纹身',jobContent:'电子零部件组装',workHours:'两班倒',meal:'包住/餐补',salary:'5500–7500元',salaryDetail:'底薪+加班费+绩效',subsidy:'夜班补贴',settlement:'月结',payday:'每月15日',payrollDesc:'银行卡发薪',workAddress:'海河教育园区雅深路8号',interviewAddress:'企业南门',interviewDress:'身份证、着装整洁',interviewTime:'工作日9:00–17:00',interviewProcess:'面试→体检→上岗',onboardingMaterials:'身份证复印件',onboardingFee:'体检费100元',keywords:'晋升快'},{seq:'2',province:'湖南省',city:'湘潭市',district:'雨湖区',town:'九华街道',orderType:'一手单',company:'湖南吉利汽车部件有限公司',interviewContact:'梁经理 138****2186',highlights:'大型集团、订单稳定',demand:'50人',environment:'自动化生产线',employmentType:'派遣工',holidayWorker:'否',position:'装配工',gender:'男',age:'18–45岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'初中及以上',hardRequirements:'适应倒班',jobContent:'汽车零部件装配',workHours:'两班倒',meal:'包吃住',salary:'6000–8500元',salaryDetail:'计时+加班费',subsidy:'满勤奖300元',settlement:'月结',payday:'每月20日',payrollDesc:'节假日顺延',workAddress:'雨湖区吉利西路',interviewAddress:'公交站集合',interviewDress:'携带身份证',interviewTime:'周一至周五',interviewProcess:'集合→面试→入职',onboardingMaterials:'身份证、银行卡',onboardingFee:'无',keywords:'稳定'},{seq:'3',province:'浙江省',city:'台州市',district:'黄岩区',town:'院桥镇',orderType:'二手单',company:'台州爱玛机车制造有限公司',interviewContact:'姬经理 189****7042',highlights:'知名品牌、宿舍好',demand:'20人',environment:'标准化车间',employmentType:'派遣工',holidayWorker:'是',position:'普工',gender:'男女不限',age:'18–48岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'不限',hardRequirements:'识字',jobContent:'电动车零部件生产',workHours:'长白班',meal:'工作餐/宿舍',salary:'6500–9000元',salaryDetail:'计件工资',subsidy:'高温补贴',settlement:'月结',payday:'每月18日',payrollDesc:'企业发薪',workAddress:'黄岩区院桥镇',interviewAddress:'厂区一号门',interviewDress:'运动鞋、长裤',interviewTime:'每周二、四',interviewProcess:'面试→分岗→入职',onboardingMaterials:'身份证、照片',onboardingFee:'无',keywords:'长白班'}];
+const filters=new Map();let filterId='',dragId='';const esc=s=>{const d=document.createElement('div');d.textContent=String(s??'—');return d.innerHTML};
+function matched(){const q=document.getElementById('search').value.trim().toLowerCase();return rows.filter(r=>{if(q&&!Object.values(r).join(' ').toLowerCase().includes(q))return false;for(const[id,f]of filters){const v=String(r[id]??'').toLowerCase();if(f.mode==='enum'&&!f.values.some(x=>x.toLowerCase()===v))return false;if(f.mode==='fuzzy'){const x=f.value.toLowerCase();if(f.op==='contains'&&!v.includes(x))return false;if(f.op==='equals'&&v!==x)return false;if(f.op==='notContains'&&v.includes(x))return false;if(f.op==='empty'&&v)return false;if(f.op==='notEmpty'&&!v)return false}}return true})}
+function render(){const data=matched(),visible=fields.filter(f=>!f.hidden);document.getElementById('count').textContent=data.length;const t=document.createElement('table');t.className='grid';t.style.width=Math.max(720,visible.length*130)+'px';const hr=t.createTHead().insertRow();visible.forEach(f=>{const th=document.createElement('th');th.dataset.id=f.id;if(f.id==='actions')th.textContent=f.label;else{const note=f.id==='seq'?'<span class="marker" onclick="showNote(event,1)">1</span>':f.id==='province'?'<span class="marker" onclick="showNote(event,4)">4</span>':f.id==='company'?'<span class="marker" onclick="showNote(event,5)">5</span>':'';th.innerHTML=`⋮⋮ ${esc(f.label)}<button class="filter ${filters.has(f.id)?'on':''}" onclick="openFilter(event,'${f.id}')">⌄</button>${note}`;bindDrag(th,f.id)}hr.appendChild(th)});const body=t.createTBody();data.forEach(r=>{const tr=body.insertRow();visible.forEach(f=>{const td=tr.insertCell();td.textContent=f.id==='actions'?'查看详情　删除':r[f.id]||'—';if(f.id==='company')td.className='company';if(f.id==='actions')td.className='ops'})});const w=document.getElementById('wrap');w.innerHTML='';w.appendChild(t)}
+function openFilter(e,id){e.stopPropagation();filterId=id;const f=fields.find(x=>x.id===id),p=document.getElementById('pop'),rect=e.currentTarget.getBoundingClientRect();document.getElementById('popTitle').textContent=(f.mode==='enum'?'枚举筛选：':'模糊查询：')+f.label;document.getElementById('fuzzy').style.display=f.mode==='fuzzy'?'block':'none';document.getElementById('enum').style.display=f.mode==='enum'?'block':'none';if(f.mode==='enum'){const selected=new Set(filters.get(id)?.values||[]),vals=[...new Set(rows.map(r=>String(r[id]||'')))];document.getElementById('enum').innerHTML=vals.map(v=>`<label><input type="checkbox" value="${esc(v)}" ${selected.has(v)?'checked':''}>${esc(v||'（空）')}</label>`).join('')}else{const old=filters.get(id);document.getElementById('operator').value=old?.op||'contains';document.getElementById('filterValue').value=old?.value||''}p.style.left=Math.max(8,Math.min(rect.left,innerWidth-278))+'px';p.style.top=Math.min(rect.bottom+6,innerHeight-310)+'px';p.classList.add('show')}
+function applyFilter(){const f=fields.find(x=>x.id===filterId);if(f.mode==='enum'){const values=[...document.querySelectorAll('#enum input:checked')].map(x=>x.value);if(values.length)filters.set(filterId,{mode:'enum',values});else filters.delete(filterId)}else{const op=document.getElementById('operator').value,value=document.getElementById('filterValue').value.trim();if(value||op==='empty'||op==='notEmpty')filters.set(filterId,{mode:'fuzzy',op,value});else filters.delete(filterId)}closePop();render()}function clearFilter(){filters.delete(filterId);closePop();render()}function closePop(){document.getElementById('pop').classList.remove('show')}
+function bindDrag(th,id){th.draggable=true;th.ondragstart=e=>{if(e.target.closest('.filter'))return e.preventDefault();dragId=id;th.classList.add('dragging')};th.ondragover=e=>{e.preventDefault();th.classList.add('over')};th.ondragleave=()=>th.classList.remove('over');th.ondrop=e=>{e.preventDefault();move(id)};th.ondragend=clearDrag;let timer,active=false;th.onpointerdown=e=>{if(e.target.closest('.filter'))return;timer=setTimeout(()=>{active=true;dragId=id;th.classList.add('dragging')},450)};th.onpointermove=e=>{if(!active)return;document.querySelectorAll('.grid th').forEach(x=>x.classList.remove('over'));document.elementFromPoint(e.clientX,e.clientY)?.closest('th[data-id]')?.classList.add('over')};th.onpointerup=e=>{clearTimeout(timer);if(active){active=false;const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('th[data-id]');if(target)move(target.dataset.id)}};th.onpointercancel=()=>{clearTimeout(timer);active=false;clearDrag()}}
+function move(target){const from=fields.findIndex(f=>f.id===dragId),to=fields.findIndex(f=>f.id===target);if(from<0||to<0||fields[from].id==='actions'||fields[to].id==='actions')return clearDrag();fields.splice(to,0,fields.splice(from,1)[0]);clearDrag();render()}function clearDrag(){document.querySelectorAll('.grid th').forEach(x=>x.classList.remove('dragging','over'))}
+function openSettings(){document.getElementById('sheetTitle').textContent='表格设置';document.getElementById('sheetBody').innerHTML='<div class="tip">系统预设字段和自定义字段均可改名；Mob端可独立配置显示状态、筛选类型及顺序。</div><div class="setting-actions"><button style="position:relative" onclick="addCustomField()">＋ 新增自定义字段<span class="marker" onclick="showNote(event,2)">2</span></button></div>'+fields.filter(f=>f.id!=='actions').map(f=>`<div class="setting-row"><span class="grip">⠿</span><input type="checkbox" ${f.hidden?'':'checked'} onchange="toggleField('${f.id}',this.checked)"><b>${esc(f.label)}</b><select onchange="setFieldMode('${f.id}',this.value)"><option value="fuzzy" ${f.mode==='fuzzy'?'selected':''}>模糊</option><option value="enum" ${f.mode==='enum'?'selected':''}>枚举</option></select><button onclick="renameField('${f.id}')">编辑</button>${f.custom?`<button onclick="deleteField('${f.id}')">删除</button>`:''}</div>`).join('');openSheet()}
+function toggleField(id,on){fields.find(f=>f.id===id).hidden=!on;render()}
+function setFieldMode(id,mode){fields.find(f=>f.id===id).mode=mode;filters.delete(id);render()}
+function openAdd(){const excluded=new Set(['seq','actions','company','province','city','district','town']),dynamic=fields.filter(f=>!excluded.has(f.id)).map(f=>{if(f.mode==='enum'){const vals=[...new Set(rows.map(r=>r[f.id]).filter(Boolean))];return `<label>${esc(f.label)}${f.custom?'（自定义）':''}<select name="${f.id}"><option value="">请选择</option>${vals.map(v=>`<option>${esc(v)}</option>`).join('')}</select></label>`}return `<label>${esc(f.label)}${f.custom?'（自定义）':''}<input name="${f.id}" placeholder="请输入${esc(f.label)}"></label>`}).join('');document.getElementById('sheetTitle').textContent='添加企业';document.getElementById('sheetBody').innerHTML=`<form class="sheet-form" onsubmit="addEnterprise(event)"><h4>原企业基础信息</h4><label>企业名称 *<input name="company" required maxlength="50" placeholder="请输入企业名称，限50字"></label><label>企业地址 *<input name="province" required placeholder="省"><input name="city" required placeholder="市"><input name="district" placeholder="县/区"><input name="town" placeholder="镇"><input name="enterpriseAddress" required placeholder="请输入详细地址"></label><div class="mini-map">⌖ 地图定位区域</div><label>打卡点<button type="button" onclick="alert('已新增打卡点')">＋ 新增打卡点</button></label><label>客户经理<select name="customerManager"><option value="">请选择</option><option>徐经理</option><option>梁经理</option></select></label><label>关联驻场 *<select name="relatedMarket" required><option value="">请选择</option><option>中山驻场</option><option>深圳驻场</option></select></label><label>归属部门 *<select name="department" required><option value="">请选择归属部门</option><option>驻场部</option><option>业务部</option></select></label><label>企业介绍 *<textarea name="enterpriseIntro" required maxlength="300" placeholder="请输入企业介绍"></textarea></label><label>企业Logo / 图片 / 视频<div class="upload-strip"><span class="upload">＋ Logo</span><span class="upload">＋ 图片</span><span class="upload">＋ 视频</span></div></label><h4>客户提供的招聘信息字段</h4>${dynamic}<button class="save-add" type="submit">保存企业</button></form>`;openSheet()}
+function addEnterprise(e){e.preventDefault();const form=new FormData(e.target),record={};fields.forEach(f=>{if(!['seq','actions'].includes(f.id))record[f.id]=form.get(f.id)||'—'});record.company=form.get('company');record.province=form.get('province')||'—';record.city=form.get('city')||'—';record.district=form.get('district')||'—';record.town=form.get('town')||'—';rows.unshift(record);rows.forEach((r,i)=>r.seq=String(i+1));closeSheet();render();alert('企业已添加，列表字段已同步')}
+function addCustomField(){const name=prompt('请输入自定义字段名称');if(!name?.trim())return;if(fields.some(f=>f.label===name.trim()))return alert('字段名称不能重复');fields.splice(fields.length-1,0,{id:'custom_'+Date.now(),label:name.trim(),hidden:false,mode:'fuzzy',custom:true});render();openSettings()}
+function renameField(id){const field=fields.find(f=>f.id===id),name=prompt('修改字段名称',field.label);if(!name?.trim()||fields.some(f=>f.label===name.trim()&&f.id!==id))return;field.label=name.trim();render();openSettings()}
+function deleteField(id){const i=fields.findIndex(f=>f.id===id);if(i<0||!fields[i].custom)return;fields.splice(i,1);filters.delete(id);render();openSettings()}
+const notes=[['替换客户列表表头','将现有客户列表表头替换为客户提供的完整表头，并在系统预设字段基础上继续支持新增自定义字段。'],['自定义字段应用于“添加企业”','新增的自定义字段需要同步应用到“添加企业”表单，创建企业时可录入对应字段内容。'],['支持编辑字段','系统预设字段和自定义字段均支持修改显示名称；改名不改变字段内部标识和已有数据映射。'],['拖拽调整字段排序','Mob端支持触屏长按约0.45秒拖拽字段；在桌面预览时也支持鼠标拖拽，操作列不参与排序。'],['各字段独立筛选','每个业务字段分别支持筛选，并可按字段类型使用模糊查询或枚举筛选；多个条件可组合生效。'],['基础信息同步与扩展','基础信息字段与 Web 端保持一致，新增支持管理打卡点、客户管理功能。'],['招聘信息字段维护','Mob 端招聘信息与 Web 端使用同一套客户字段、自定义字段、枚举值和筛选逻辑。']];
+const mobLogicDetails={1:{desc:'将现有客户列表表头替换为客户提供的完整字段，并保留新增自定义字段能力。',rules:['系统按客户清单展示完整字段。','已有数据按照内部字段标识继续映射。','选择列和操作列保持固定。'],result:'列表加载后直接展示新版字段结构。'},2:{desc:'新增自定义字段后，同步应用于添加企业表单。',rules:['字段名称不可与已有字段重复。','字段创建后进入招聘信息区域。','新企业可录入对应字段内容。'],result:'保存企业后，自定义字段值同步显示在列表。'},3:{desc:'系统预设字段和自定义字段均支持修改显示名称。',rules:['改名不改变内部字段标识。','字段名称同步到列表、筛选和添加企业。','枚举字段可维护可选值。'],result:'保存后使用最新字段名称和枚举值。'},4:{desc:'Mob端支持长按表头拖拽改变字段展示顺序。',rules:['长按约0.45秒进入拖拽状态。','移动到目标表头后松开完成排序。','操作列不参与拖拽。'],result:'列表立即按照新顺序重新展示。'},5:{desc:'每个业务字段可独立使用模糊查询或枚举筛选。',rules:['模糊查询支持包含、等于、不包含、为空和不为空。','枚举筛选使用字段管理维护的可选值。','多个筛选条件可组合生效。'],result:'列表数据量和展示结果即时更新。'},6:{desc:'基础信息字段与Web端同步，新增支持管理打卡点、客户管理功能。',rules:['企业名称、省、市、县/区、镇、详细地址等字段与Web一致。','打卡点支持独立新增、编辑和管理。','客户管理功能与Web端使用同一套企业基础信息。'],result:'Mob端新增企业和编辑企业时可维护完整基础信息。'},7:{desc:'招聘信息支持新增字段维护，逻辑与Web端一致。',rules:['客户清单中的招聘字段全部可录入。','文本字段支持输入，枚举字段读取Web端字典值。','自定义字段和字段名称变更同步生效。'],result:'保存后招聘信息同步显示在Mob客户列表，并支持对应筛选。'}}
+function showNote(e,no){e.stopPropagation();e.preventDefault();const base=notes[no-1],detail=mobLogicDetails[no];if(!base||!detail)return;document.getElementById('mobLogicNo').textContent=no;document.getElementById('mobLogicTitle').textContent=base[0];document.getElementById('mobLogicContent').innerHTML=`<span class="mob-logic-tag">功能说明</span><h4>1、功能目的</h4><p>${esc(detail.desc)}</p><h4>2、展示与操作规则</h4><ul>${detail.rules.map(rule=>`<li>${esc(rule)}</li>`).join('')}</ul><h4>3、处理结果</h4><p>${esc(detail.result)}</p>`;document.querySelectorAll('.marker').forEach(marker=>marker.classList.toggle('selected',marker.textContent.trim()==no));document.getElementById('mobLogicCard').classList.add('show')}
+function closeMobLogic(){document.getElementById('mobLogicCard').classList.remove('show');document.querySelectorAll('.marker').forEach(marker=>marker.classList.remove('selected'))}
+function openSheet(){document.getElementById('mask').classList.add('show');document.getElementById('sheet').classList.add('show')}function closeSheet(){document.getElementById('mask').classList.remove('show');document.getElementById('sheet').classList.remove('show')}function closeLogic(){document.getElementById('app').classList.add('logic-off');closeMobLogic();closeSheet()}function openLogic(){document.getElementById('app').classList.remove('logic-off')}function openWeb(){location.href='customer-management-prototype.html'}
+function mobEnumValues(f){const defaults={orderType:['一手单','二手单'],environment:['空调车间','恒温车间','普通车间','无尘车间','自动化生产线'],employmentType:['正式工','派遣工','小时工','临时工'],holidayWorker:['是','否'],gender:['男','女','男女不限'],ethnicity:['不限','汉族','少数民族'],household:['不限','本地户籍','外地户籍'],documents:['身份证','身份证+银行卡','身份证+毕业证'],education:['不限','小学','初中及以下','中专/中技','高中','大专','本科','硕士','博士','其他'],workHours:['长白班','两班倒','三班倒','综合工时'],meal:['包吃住','包住/餐补','工作餐/宿舍','餐补','不包食宿'],settlement:['日结','周结','月结'],interviewTime:['工作日','周一至周五','每周二、四','预约面试']};return f.enumValues||defaults[f.id]||[...new Set(rows.map(r=>String(r[f.id]||'')).filter(Boolean))]}
+function openSettings(){document.getElementById('sheetTitle').textContent='字段管理';document.getElementById('sheetBody').innerHTML='<div class="tip">系统预设字段和自定义字段均可改名；枚举字段可维护可选值，并同步用于添加企业和列表筛选。</div><div class="setting-actions"><button style="position:relative" onclick="addCustomField()">＋ 新增自定义字段<span class="marker" onclick="showNote(event,2)">2</span></button></div>'+fields.filter(f=>f.id!=='actions').map(f=>`<div class="setting-row"><span class="grip">⠿</span><input type="checkbox" ${f.hidden?'':'checked'} onchange="toggleField('${f.id}',this.checked)"><b>${esc(f.label)}</b><select onchange="setFieldMode('${f.id}',this.value)"><option value="fuzzy" ${f.mode==='fuzzy'?'selected':''}>模糊</option><option value="enum" ${f.mode==='enum'?'selected':''}>枚举</option></select>${f.mode==='enum'?`<button onclick="manageMobEnum('${f.id}')">枚举值</button>`:''}<button onclick="renameField('${f.id}')">编辑</button>${f.custom?`<button onclick="deleteField('${f.id}')">删除</button>`:''}</div>`).join('');openSheet()}
+function setFieldMode(id,mode){fields.find(f=>f.id===id).mode=mode;filters.delete(id);render();openSettings()}
+function manageMobEnum(id){const f=fields.find(x=>x.id===id),value=prompt(`维护“${f.label}”枚举值（每行一个）`,mobEnumValues(f).join('\n'));if(value===null)return;f.enumValues=[...new Set(value.split(/\n|,|，/).map(v=>v.trim()).filter(Boolean))];openSettings()}
+function openFilter(e,id){e.stopPropagation();filterId=id;const f=fields.find(x=>x.id===id),p=document.getElementById('pop'),rect=e.currentTarget.getBoundingClientRect();document.getElementById('popTitle').textContent=(f.mode==='enum'?'枚举筛选：':'模糊查询：')+f.label;document.getElementById('fuzzy').style.display=f.mode==='fuzzy'?'block':'none';document.getElementById('enum').style.display=f.mode==='enum'?'block':'none';if(f.mode==='enum'){const selected=new Set(filters.get(id)?.values||[]),vals=[...new Set([...mobEnumValues(f),...rows.map(r=>String(r[id]||''))])].filter(Boolean);document.getElementById('enum').innerHTML=vals.map(v=>`<label><input type="checkbox" value="${esc(v)}" ${selected.has(v)?'checked':''}>${esc(v||'（空）')}</label>`).join('')}else{const old=filters.get(id);document.getElementById('operator').value=old?.op||'contains';document.getElementById('filterValue').value=old?.value||''}p.style.left=Math.max(8,Math.min(rect.left,innerWidth-278))+'px';p.style.top=Math.min(rect.bottom+6,innerHeight-310)+'px';p.classList.add('show')}
+function switchMobAddTab(tab){document.querySelectorAll('.mob-add-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.mob-add-panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===tab))}
+function openAddV2(){const excluded=new Set(['seq','actions','company','province','city','district','town']),dynamic=fields.filter(f=>!excluded.has(f.id)).map(f=>f.mode==='enum'?`<label>${esc(f.label)}${f.custom?'（自定义）':''}<select name="${f.id}"><option value="">请选择</option>${mobEnumValues(f).map(v=>`<option>${esc(v)}</option>`).join('')}</select></label>`:`<label>${esc(f.label)}${f.custom?'（自定义）':''}<input name="${f.id}" placeholder="请输入${esc(f.label)}"></label>`).join('');document.getElementById('sheetTitle').textContent='添加企业';document.getElementById('sheetBody').innerHTML=`<form class="sheet-form" novalidate onsubmit="addEnterpriseV2(event)"><nav class="mob-add-tabs"><button type="button" class="active" data-tab="basic" onclick="switchMobAddTab('basic')">基础信息</button><button type="button" data-tab="recruit" onclick="switchMobAddTab('recruit')">招聘信息</button><button type="button" data-tab="contract" onclick="switchMobAddTab('contract')">合同信息</button></nav><section class="mob-add-panel active" data-panel="basic"><label>企业名称 *<input name="company" maxlength="50" placeholder="请输入企业名称，限50字"></label><label>省 *<input name="province" placeholder="省"></label><label>市 *<input name="city" placeholder="市"></label><label>县/区<input name="district" placeholder="县/区"></label><label>镇<input name="town" placeholder="镇"></label><label>详细地址 *<input name="enterpriseAddress" placeholder="请输入详细地址"></label><div class="mini-map">⌖ 地图定位区域</div><label>打卡点<button type="button" onclick="alert('已新增打卡点')">＋ 新增打卡点</button></label><label>客户经理<select name="customerManager"><option value="">请选择</option><option>徐经理</option><option>梁经理</option></select></label><label>关联驻场 *<select name="relatedMarket"><option value="">请选择</option><option>中山驻场</option><option>深圳驻场</option></select></label><label>归属部门 *<select name="department"><option value="">请选择归属部门</option><option>驻场部</option><option>业务部</option></select></label><label>企业介绍 *<textarea name="enterpriseIntro" maxlength="300" placeholder="请输入企业介绍"></textarea></label><label>企业Logo<div class="media-tip">建议尺寸200*200px；jpg/png文件；大小不超过5M；如未上传，默认展示本小程序头像</div><span class="upload">＋ Logo</span></label><label>企业图片<div class="media-tip">建议尺寸750*400px；jpg/png文件；大小不超过5M；图片不多于5张；图片顺序支持拖动更改；</div><span class="upload">＋ 最多5张</span></label><label>企业视频<div class="media-tip">建议格式为mp4/avi的视频文件；大小不超过300M；视频不超过一个</div><div class="video-box">☁<br>点击或将视频拖拽到此处上传<br>支持的扩展名：mp4、avi</div></label></section><section class="mob-add-panel" data-panel="recruit">${dynamic}</section><section class="mob-add-panel" data-panel="contract"><label>合同名称 *<input name="contractName" placeholder="请输入合同名称"></label><label>合同编号<input name="contractNo" placeholder="请输入合同编号"></label><label>合同起止时间<div class="date-pair"><input name="contractStart" type="date"><span>~</span><input name="contractEnd" type="date"></div></label><label><input style="width:16px;height:16px" name="contractLong" type="checkbox"> 长期</label><label>合同到期提醒<div class="contract-reminders">${[1,3,5,7,10,15,20,30,60,90].map(d=>`<label><input type="checkbox" name="contractReminder" value="${d}">${d}日</label>`).join('')}</div></label><label>合同文件<div class="contract-upload">☁<br>将文件拖到此处，或点击上传</div></label><div class="contract-hint-mob">允许上传jpg、png、pdf文件，单个文件大小限2M，限上传10个文件</div></section><button class="save-add" type="submit">保存企业</button></form>`;openSheet()}
+function openAddV3(){openAddV2();const basicTab=document.querySelector('.mob-add-tabs button[data-tab="basic"]'),recruitTab=document.querySelector('.mob-add-tabs button[data-tab="recruit"]');[basicTab,recruitTab].forEach(tab=>{if(tab){tab.style.position='relative'}});if(basicTab)basicTab.insertAdjacentHTML('beforeend','<span class="marker" onclick="showNote(event,6)">6</span>');if(recruitTab)recruitTab.insertAdjacentHTML('beforeend','<span class="marker" onclick="showNote(event,7)">7</span>');const excluded=new Set(['seq','actions','company','province','city','district','town']),businessFields=fields.filter(f=>!excluded.has(f.id)),labels=document.querySelectorAll('.mob-add-panel[data-panel="recruit"]>label');labels.forEach((label,index)=>{const field=businessFields[index],textNode=[...label.childNodes].find(node=>node.nodeType===3);if(textNode)textNode.remove();const caption=document.createElement('span');caption.className='mob-field-caption';caption.innerHTML=`${esc(field.label+(field.custom?'（自定义）':''))}<span class="marker" onclick="showMobRecruitFieldNote(event,'${field.id}',${index+8})">${index+8}</span>`;label.insertBefore(caption,label.firstChild)})}
+function showMobRecruitFieldNote(e,id,no){e.stopPropagation();e.preventDefault();const field=fields.find(f=>f.id===id),isEnum=field.mode==='enum';document.getElementById('mobLogicNo').textContent=no;document.getElementById('mobLogicTitle').textContent='招聘信息 · '+field.label;document.getElementById('mobLogicContent').innerHTML=`<span class="mob-logic-tag">字段逻辑说明</span><h4>1、字段用途</h4><p>用于维护企业招聘信息中的“${esc(field.label)}”，并同步展示到客户列表。</p><h4>2、录入与维护规则</h4><ul><li>${isEnum?'添加企业时从枚举下拉选项中选择。':'添加企业时支持直接输入文本内容。'}</li><li>${isEnum?'枚举值在字段管理模块统一维护。':'字段显示名称可在字段管理模块修改。'}</li><li>系统预设字段和自定义字段使用相同保存规则。</li></ul><h4>3、筛选与结果</h4><p>${isEnum?'列表支持按枚举值多选筛选。':'列表支持模糊查询条件筛选。'}保存后字段值立即同步到列表。</p>`;document.querySelectorAll('.marker').forEach(marker=>marker.classList.toggle('selected',marker===e.currentTarget));document.getElementById('mobLogicCard').classList.add('show')}
+function addEnterpriseV2(e){e.preventDefault();const form=new FormData(e.target),required=['company','province','city','enterpriseAddress','relatedMarket','department','enterpriseIntro'];if(required.some(name=>!String(form.get(name)||'').trim())){switchMobAddTab('basic');return alert('请完善基础信息中的必填项')}const record={};fields.forEach(f=>{if(!['seq','actions'].includes(f.id))record[f.id]=form.get(f.id)||'—'});record.company=form.get('company');record.province=form.get('province')||'—';record.city=form.get('city')||'—';record.district=form.get('district')||'—';record.town=form.get('town')||'—';rows.unshift(record);rows.forEach((r,i)=>r.seq=String(i+1));closeSheet();render();alert('企业已添加，列表字段已同步')}
+const baseMobRender=render;render=function(){baseMobRender();const data=matched();document.querySelectorAll('.grid tbody tr').forEach((tr,index)=>{const cell=tr.querySelector('.ops'),recordIndex=rows.indexOf(data[index]);if(cell)cell.innerHTML=`<button onclick="editMobEnterprise(${recordIndex})">编辑</button><button onclick="deleteMobEnterprise(${recordIndex})">删除</button>`})}
+function editMobEnterprise(index){const record=rows[index];openAddV3();document.getElementById('sheetTitle').textContent='企业详情';const form=document.querySelector('#sheetBody form');form.onsubmit=e=>saveMobEnterprise(e,index);['company','province','city','district','town'].forEach(name=>{if(form.elements[name])form.elements[name].value=record[name]||''});form.elements.enterpriseAddress.value=record.workAddress||'企业详细地址';form.elements.relatedMarket.value='中山驻场';form.elements.department.value='驻场部';form.elements.enterpriseIntro.value='企业资料由客户管理模块统一维护。';fields.filter(f=>form.elements[f.id]).forEach(field=>{const control=form.elements[field.id],value=record[field.id]||'';if(control.tagName==='SELECT'&&value&&![...control.options].some(option=>option.value===value))control.add(new Option(value,value));control.value=value})}
+function saveMobEnterprise(e,index){e.preventDefault();const form=new FormData(e.target),required=['company','province','city','enterpriseAddress','relatedMarket','department','enterpriseIntro'];if(required.some(name=>!String(form.get(name)||'').trim())){switchMobAddTab('basic');return alert('请完善基础信息中的必填项')}fields.forEach(field=>{if(!['seq','actions'].includes(field.id))rows[index][field.id]=form.get(field.id)||'—'});rows[index].company=form.get('company');rows[index].province=form.get('province');rows[index].city=form.get('city');rows[index].district=form.get('district')||'—';rows[index].town=form.get('town')||'—';rows[index].workAddress=form.get('enterpriseAddress');closeSheet();render();alert('企业详情已保存')}
+function deleteMobEnterprise(index){if(!confirm(`确认删除“${rows[index].company}”吗？`))return;rows.splice(index,1);rows.forEach((row,i)=>row.seq=String(i+1));render()}
+const mobDictionaryIds=['education','ethnicity','gender','environment','employmentType','holidayWorker','settlement'];let activeMobDict='education';
+function openMobDictionary(){document.getElementById('sheetTitle').textContent='字典管理';renderMobDictionary();openSheet()}
+function renderMobDictionary(){const nav=mobDictionaryIds.map(id=>{const field=fields.find(f=>f.id===id);return `<button class="${id===activeMobDict?'active':''}" onclick="selectMobDictionary('${id}')">${esc(field.label)}</button>`}).join(''),field=fields.find(f=>f.id===activeMobDict),values=mobEnumValues(field);document.getElementById('sheetBody').innerHTML=`<div class="tip">招聘信息枚举值统一维护，修改后同步用于添加企业与列表筛选。</div><div class="dict-mobile-nav">${nav}</div><div>${values.map((value,index)=>`<div class="dict-mobile-row"><span>${index+1}</span><b>${esc(value)}</b><span><button onclick="editMobDictItem(${index})">编辑</button><button onclick="deleteMobDictItem(${index})">删除</button></span></div>`).join('')}</div><button class="save-add" onclick="addMobDictItem()">＋ 添加字典值</button>`}
+function selectMobDictionary(id){activeMobDict=id;renderMobDictionary()}
+function editMobDictItem(index){const field=fields.find(f=>f.id===activeMobDict),values=[...mobEnumValues(field)],value=prompt('编辑字典值',values[index]);if(!value?.trim())return;values[index]=value.trim();field.enumValues=values;renderMobDictionary()}
+function deleteMobDictItem(index){const field=fields.find(f=>f.id===activeMobDict),values=[...mobEnumValues(field)];values.splice(index,1);field.enumValues=values;renderMobDictionary()}
+function addMobDictItem(){const field=fields.find(f=>f.id===activeMobDict),values=[...mobEnumValues(field)],value=prompt('请输入新增字典值');if(!value?.trim()||values.includes(value.trim()))return;values.push(value.trim());field.enumValues=values;renderMobDictionary()}
+function initFloatingAdd(){const button=document.getElementById('floatingAdd'),app=document.getElementById('app');let startX=0,startY=0,offsetX=0,offsetY=0,moved=false;button.addEventListener('pointerdown',e=>{const rect=button.getBoundingClientRect();startX=e.clientX;startY=e.clientY;offsetX=e.clientX-rect.left;offsetY=e.clientY-rect.top;moved=false;button.setPointerCapture?.(e.pointerId)});button.addEventListener('pointermove',e=>{if(!button.hasPointerCapture?.(e.pointerId))return;if(Math.hypot(e.clientX-startX,e.clientY-startY)>5)moved=true;if(!moved)return;const bounds=app.getBoundingClientRect(),left=Math.max(bounds.left+8,Math.min(e.clientX-offsetX,bounds.right-button.offsetWidth-8)),top=Math.max(bounds.top+8,Math.min(e.clientY-offsetY,bounds.bottom-button.offsetHeight-8));button.style.left=left+'px';button.style.top=top+'px';button.style.right='auto';button.style.bottom='auto'});button.addEventListener('pointerup',e=>{if(button.hasPointerCapture?.(e.pointerId))button.releasePointerCapture(e.pointerId);if(!moved)openAddV3()});button.addEventListener('pointercancel',()=>{moved=false})}
+document.addEventListener('click',e=>{if(!e.target.closest('#pop')&&!e.target.closest('.filter'))closePop()});initFloatingAdd();render();
+</script></body></html>
