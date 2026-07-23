@@ -3,106 +3,302 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>客户管理 · 移动端</title>
+  <title>客户管理 · 移动端横版表格</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font:14px/1.5 "PingFang SC","Microsoft YaHei",sans-serif;background:#f4f6fa;color:#303744;max-width:480px;margin:0 auto}
-    .header{background:linear-gradient(135deg,#3477f6,#5b9bff);color:#fff;padding:16px 18px;position:sticky;top:0;z-index:10}
-    .header h1{font-size:17px;font-weight:600}
-    .header .stats{display:flex;gap:18px;margin-top:8px;font-size:12px;opacity:.9}
-    .stats b{font-size:18px;margin-right:3px}
-    .search-bar{position:sticky;top:85px;z-index:9;background:#fff;padding:10px 14px;border-bottom:1px solid #e8ecf2;display:flex;gap:8px}
-    .search-bar select{flex:1;height:36px;border:1px solid #dce2eb;border-radius:8px;padding:0 10px;background:#fff;font-size:13px;color:#4d5a70}
-    .search-bar input{flex:2;height:36px;border:1px solid #dce2eb;border-radius:8px;padding:0 12px;font-size:13px;outline:0}
-    .list{padding:12px 14px}
-    .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(36,58,98,.06)}
-    .card .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;margin-right:6px}
-    .card .tag.first{background:#e8f7ed;color:#20a365}.card .tag.second{background:#fff3e6;color:#ef7a31}
-    .card h3{font-size:15px;margin:8px 0 6px;color:#1677ff}
-    .card .meta{font-size:12px;color:#8d96a5;margin-bottom:4px}
-    .card .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-    .card .salary{color:#ef7a31;font-weight:700;font-size:16px}
-    .card .demand{font-size:13px;color:#4d5a70}
-    .card .contact{font-size:12px;color:#8d96a5;margin-top:6px;padding-top:8px;border-top:1px solid #f0f2f5}
-    .empty{text-align:center;padding:60px 20px;color:#a0a9b5}
-    .empty p{margin-top:8px}
-    .fab{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;background:#3477f6;color:#fff;border:0;font-size:24px;box-shadow:0 4px 14px rgba(52,119,246,.4);cursor:pointer}
-    .overlay{display:none;position:fixed;inset:0;background:#1d2c4860;z-index:50}
-    .overlay.show{display:flex;align-items:flex-end}
-    .sheet{width:100%;max-height:80vh;background:#fff;border-radius:16px 16px 0 0;padding:20px 18px 30px;overflow:auto}
-    .sheet h2{margin-bottom:16px;font-size:16px}
-    .sheet label{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:13px;color:#58667b}
-    .sheet input,.sheet select{height:38px;border:1px solid #dce2eb;border-radius:6px;padding:0 10px;font-size:13px}
-    .sheet .actions{display:flex;gap:10px;margin-top:16px}
-    .sheet button{flex:1;height:40px;border-radius:8px;border:1px solid #dce2eb;background:#fff;font-size:14px}
-    .sheet .primary{background:#3477f6;color:#fff;border-color:#3477f6}
-    .detail-card{background:#fff;border-radius:10px;padding:16px;margin-bottom:10px}
-    .detail-card .label{font-size:11px;color:#8d96a5;margin-bottom:2px}
-    .detail-card .value{font-size:14px;color:#303744;margin-bottom:12px}
-    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+    body{font:13px/1.45 "PingFang SC","Microsoft YaHei",sans-serif;background:#f4f6fa;color:#303744;overflow-x:hidden}
+    .mob-header{background:linear-gradient(100deg,#1677ff,#4096ff);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:20}
+    .mob-header h1{font-size:17px;font-weight:600}
+    .mob-header .mob-stats{display:flex;gap:16px;margin-top:6px;font-size:12px;opacity:.92}
+    .mob-stats b{font-size:17px;margin-right:3px;color:#fff}
+    .mob-toolbar{position:sticky;top:72px;z-index:19;background:#fff;padding:8px 12px;border-bottom:1px solid #e8ecf2;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:48px}
+    .mob-toolbar .info{color:#7d8796;font-size:12px}
+    .mob-toolbar .info b{color:#1677ff}
+    .mob-toolbar .filter-badge{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 10px;border:1px solid #dce2eb;border-radius:5px;background:#fff;color:#4d5a70;font-size:12px;cursor:pointer}
+    .mob-toolbar .filter-badge.active{background:#eaf4ff;color:#1677ff;border-color:#1677ff}
+    .mob-table-wrap{overflow:auto;padding:8px;background:#f4f6fa;flex:1}
+    .mob-table{border-collapse:separate;border-spacing:0;table-layout:fixed;background:#fff;border:1px solid #e1e6ed;border-radius:6px;overflow:hidden}
+    .mob-table th,.mob-table td{width:130px;min-width:130px;height:44px;padding:8px 10px;border-right:1px solid #edf0f4;border-bottom:1px solid #e7ebf0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff;font-size:12px;text-align:left}
+    .mob-table th{height:38px;position:sticky;top:0;z-index:4;background:#f5f6f8;color:#7b8594;font-weight:500;padding-right:30px;cursor:grab;-webkit-user-select:none;user-select:none}
+    .mob-table th .th-label{display:inline;pointer-events:none}
+    .mob-table th .th-grip{color:#b7bfca;margin-right:3px;font-size:10px;pointer-events:none}
+    .mob-table th.mob-dragging{opacity:.5;background:#dfeaff}
+    .mob-table th.mob-drag-over{box-shadow:inset 3px 0 #1677ff}
+    .mob-head-filter{position:absolute;right:4px;top:7px;width:24px;height:24px;border:0;background:transparent;color:#8691a1;border-radius:4px;padding:0;font-size:11px;cursor:pointer;display:grid;place-items:center}
+    .mob-head-filter.active,.mob-head-filter:hover{background:#e4efff;color:#1677ff}
+    .mob-table th:first-child,.mob-table td:first-child{position:sticky;left:0;z-index:3;width:58px;min-width:58px;background:#fff;text-align:center}
+    .mob-table th:first-child{z-index:6;background:#f5f6f8}
+    .mob-table th:last-child,.mob-table td:last-child{position:sticky;right:0;z-index:3;width:100px;min-width:100px;background:#fff;box-shadow:-4px 0 8px #344c7012;text-align:center}
+    .mob-table th:last-child{z-index:6;background:#f5f6f8;cursor:default;padding-right:10px}
+    .mob-table tbody tr:nth-child(even){background:#f8fafc}
+    .mob-table tbody tr:nth-child(even) td:first-child{background:#f8fafc}
+    .mob-table tbody tr:nth-child(even) td:last-child{background:#f8fafc}
+    .mob-company{color:#1677ff;font-weight:600}
+    .mob-actions{color:#1677ff;font-size:11px}
+    .mob-empty{padding:60px 20px;text-align:center;color:#929cac;font-size:14px}
+    .mob-pages{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid #edf0f4;background:#fff;font-size:12px;color:#7a8597}
+    .mob-pages button{height:28px;min-width:28px;border:1px solid #dfe4ed;background:#fff;border-radius:4px;font-size:12px;cursor:pointer;color:#4d5a70}
+    .mob-pages button:disabled{opacity:.35;cursor:default}
+    .mob-pages button.on{color:#1677ff;border-color:#1677ff;background:#f0f7ff}
+    .filter-overlay{display:none;position:fixed;inset:0;background:#1d2c4860;z-index:80}
+    .filter-overlay.show{display:block}
+    .filter-sheet{position:absolute;right:0;top:0;bottom:0;width:300px;background:#fff;overflow:auto;padding:18px;box-shadow:-8px 0 24px #1d2c4820}
+    .filter-sheet h3{margin:0 0 14px;font-size:15px;color:#303744;display:flex;align-items:center;justify-content:space-between}
+    .filter-sheet h3 button{border:0;background:transparent;font-size:20px;color:#8d96a5;cursor:pointer}
+    .filter-sheet .fuzzy-block{display:block}
+    .filter-sheet .fuzzy-block select{width:100%;height:36px;border:1px solid #dce2eb;border-radius:5px;margin-bottom:8px;padding:0 8px;font-size:13px;background:#fff;color:#4d5a70}
+    .filter-sheet .fuzzy-block input{width:100%;height:36px;border:1px solid #dce2eb;border-radius:5px;padding:0 10px;font-size:13px}
+    .filter-sheet .enum-block{display:none}
+    .filter-sheet .enum-list{max-height:260px;overflow:auto;border:1px solid #e1e6ee;border-radius:6px;margin-bottom:10px;padding:5px}
+    .filter-sheet .enum-list label{display:flex;align-items:center;gap:8px;padding:7px;border-radius:4px;font-size:13px;cursor:pointer}
+    .filter-sheet .enum-list label:hover{background:#f2f6fc}
+    .filter-sheet .enum-list input{width:auto;height:auto;margin:0}
+    .filter-sheet .filter-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+    .filter-sheet .filter-actions button{height:34px;border:1px solid #dce2eb;background:#fff;border-radius:5px;padding:0 14px;font-size:12px;cursor:pointer}
+    .filter-sheet .filter-actions .primary{background:#1677ff;color:#fff;border-color:#1677ff}
+    .filter-chips{padding:6px 12px;background:#fff;border-bottom:1px solid #eef1f5;display:flex;gap:6px;flex-wrap:wrap;font-size:11px}
+    .filter-chip{background:#eaf2ff;color:#1677ff;border-radius:4px;padding:3px 8px;display:inline-flex;align-items:center;gap:4px}
+    .filter-chip button{border:0;background:transparent;color:#1677ff;padding:0;font-size:13px;cursor:pointer;line-height:1}
+    .filter-chip .clear-all{background:#f0f2f5;color:#7d8796;border:0;border-radius:3px;padding:2px 7px;font-size:11px;cursor:pointer}
   </style>
 </head>
 <body>
-  <div class="header">
+  <div class="mob-header">
     <h1>客户管理</h1>
-    <div class="stats"><span><b id="total">0</b>客户总数</span><span><b>119</b>在招岗位</span></div>
+    <div class="mob-stats"><span>客户总数：<b id="mobTotal">0</b></span><span>在招岗位：<b>119</b></span></div>
   </div>
-  <div class="search-bar">
-    <select id="region" onchange="render()"><option value="">全部地区</option><option>天津市</option><option>湖南省</option><option>浙江省</option></select>
-    <input id="search" placeholder="搜索企业名称" oninput="render()">
+  <div class="mob-toolbar">
+    <span class="info">共 <b id="mobCount">0</b> 条 · 第 <b id="mobPageInfo">1/1</b> 页</span>
+    <button class="filter-badge" id="filterBadgeBtn" onclick="toggleFilterPanel()">⌄ 筛选</button>
   </div>
-  <div class="list" id="list"></div>
-  <div class="empty" id="empty"><div style="font-size:40px">📋</div><p>没有匹配的客户</p></div>
-  <button class="fab" onclick="openAdd()">＋</button>
-  <div class="overlay" id="addOverlay" onclick="closeAdd(event)"><form class="sheet" onsubmit="addCustomer(event)"><h2>添加客户</h2><label>企业名称 *<input name="company" required placeholder="请输入"></label><label>一二手单<select name="orderType"><option>一手单</option><option>二手单</option></select></label><div style="display:flex;gap:8px"><label style="flex:1">省<input name="province" placeholder="如：广东省"></label><label style="flex:1">市<input name="city" placeholder="如：中山市"></label></div><label>招聘岗位<input name="position" placeholder="如：操作员"></label><label>近30天需求人数<input name="demand" placeholder="如：30人"></label><label>薪资待遇<input name="salary" placeholder="如：5500-7500元"></label><div class="actions"><button type="button" onclick="closeAdd()">取消</button><button class="primary">保存</button></div></form></div>
-  <div class="overlay" id="detailOverlay" onclick="closeDetail(event)"><div class="sheet" id="detailSheet"></div></div>
-
+  <div class="filter-chips" id="filterChips"></div>
+  <div class="mob-table-wrap" id="mobTableWrap">
+    <div class="mob-empty" id="mobEmpty">没有符合当前条件的客户</div>
+  </div>
+  <div class="mob-pages">
+    <button id="mobPrev" onclick="changePage(-1)" disabled>‹</button>
+    <button class="on" id="mobPageBtn">1</button>
+    <button id="mobNext" onclick="changePage(1)">›</button>
+  </div>
+  <div class="filter-overlay" id="filterOverlay" onclick="closeFilterPanel(event)">
+    <div class="filter-sheet" onclick="event.stopPropagation()">
+      <h3><span id="filterTitle">字段筛选</span><button onclick="closeFilterPanel()">×</button></h3>
+      <div id="fuzzyFilter" class="fuzzy-block">
+        <select id="filterOperator" onchange="toggleFilterInput()">
+          <option value="contains">包含</option>
+          <option value="equals">等于</option>
+          <option value="notContains">不包含</option>
+          <option value="empty">为空</option>
+          <option value="notEmpty">不为空</option>
+        </select>
+        <input id="filterValue" placeholder="请输入筛选内容">
+      </div>
+      <div id="enumFilter" class="enum-block">
+        <div class="enum-list" id="enumList"></div>
+      </div>
+      <div class="filter-actions">
+        <button onclick="clearCurrentFilter()">清除</button>
+        <button class="primary" onclick="applyCurrentFilter()">确定</button>
+      </div>
+    </div>
+  </div>
   <script>
-    const data=[
+    const systemFields=[
+      ['select','选择'],['seq','序号'],['province','省'],['city','市'],['district','县/区'],['town','镇'],
+      ['orderType','一二手单'],['company','企业名称'],['interviewContact','面试对接人名字+电话'],
+      ['highlights','企业亮点'],['demand','近30天内需求人数'],['environment','工作环境'],
+      ['employmentType','用工性质'],['holidayWorker','是否要寒暑假工'],['position','招聘岗位'],
+      ['gender','性别要求'],['age','年龄要求'],['ethnicity','民族'],['household','户籍要求'],
+      ['documents','证件要求'],['education','学历要求'],['hardRequirements','其他硬性要求'],
+      ['jobContent','工作内容'],['workHours','工作时间'],['meal','食宿'],['salary','薪资待遇'],
+      ['salaryDetail','具体薪酬计算明细'],['subsidy','其他和钱相关补贴'],['settlement','结算方式'],
+      ['payday','发薪日'],['payrollDesc','发薪说明'],['workAddress','工作地点'],
+      ['interviewAddress','面试地点'],['interviewDress','面试携带/着装要求'],['interviewTime','面试时间'],
+      ['interviewProcess','面试-入职流程'],['onboardingMaterials','入职材料/通知模板'],
+      ['onboardingFee','入职费用'],['keywords','补充亮点关键词'],['actions','操作']
+    ];
+    const enumDefaults=new Set(['province','city','district','town','orderType','employmentType','holidayWorker','gender','ethnicity','education','settlement']);
+    const seedData=[
       {seq:'1',province:'天津市',city:'天津市',district:'津南区',town:'海河教育园',orderType:'一手单',company:'天津六合时利和电子有限公司',interviewContact:'李经理 15620433222',highlights:'恒温车间、管理规范',demand:'30人',environment:'空调车间，坐班为主',employmentType:'正式工',holidayWorker:'否',position:'操作员 / 质检员',gender:'男女不限',age:'20–45岁',ethnicity:'不限',household:'不限',documents:'身份证原件',education:'初中及以上',hardRequirements:'无大面积纹身',jobContent:'电子零部件组装与质检',workHours:'两班倒，月休4天',meal:'包住 / 餐补',salary:'5500–7500元',salaryDetail:'底薪+加班费+绩效',subsidy:'夜班补贴20元/天',settlement:'月结',payday:'每月15日',payrollDesc:'银行卡发薪',workAddress:'海河教育园区雅深路8号',interviewAddress:'企业南门招聘中心',interviewDress:'身份证、黑色水笔；着装整洁',interviewTime:'工作日 9:00–17:00',interviewProcess:'面试→体检→培训→上岗',onboardingMaterials:'身份证复印件2张、照片4张',onboardingFee:'体检费100元',keywords:'晋升快、留任奖'},
       {seq:'2',province:'湖南省',city:'湘潭市',district:'雨湖区',town:'九华街道',orderType:'一手单',company:'湖南吉利汽车部件有限公司',interviewContact:'梁经理 138****2186',highlights:'大型汽车集团、订单稳定',demand:'50人',environment:'自动化生产线',employmentType:'派遣工',holidayWorker:'否',position:'装配工 / 质检',gender:'男',age:'18–45岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'初中及以上',hardRequirements:'能适应倒班',jobContent:'汽车零部件装配',workHours:'8:00–20:00 两班倒',meal:'包吃住',salary:'6000–8500元',salaryDetail:'计时工资+加班费',subsidy:'满勤奖300元',settlement:'月结',payday:'每月20日',payrollDesc:'遇节假日顺延',workAddress:'雨湖区吉利西路',interviewAddress:'吉利西路公交站集合',interviewDress:'携带身份证',interviewTime:'周一至周五',interviewProcess:'集合→面试→体检→入职',onboardingMaterials:'身份证、银行卡',onboardingFee:'无',keywords:'包吃住、工作稳定'},
       {seq:'3',province:'浙江省',city:'台州市',district:'黄岩区',town:'院桥镇',orderType:'二手单',company:'台州爱玛机车制造有限公司',interviewContact:'姬经理 189****7042',highlights:'知名品牌、宿舍条件好',demand:'20人',environment:'标准化车间',employmentType:'派遣工',holidayWorker:'是',position:'普工 / 仓管',gender:'男女不限',age:'18–48岁',ethnicity:'不限',household:'不限',documents:'身份证',education:'不限',hardRequirements:'识字，会写姓名',jobContent:'电动车零部件生产',workHours:'长白班为主',meal:'工作餐 / 宿舍',salary:'6500–9000元',salaryDetail:'计件工资，多劳多得',subsidy:'高温补贴、工龄奖',settlement:'月结',payday:'每月18日',payrollDesc:'企业统一发薪',workAddress:'黄岩区院桥镇',interviewAddress:'厂区一号门',interviewDress:'运动鞋、长裤',interviewTime:'每周二、四',interviewProcess:'面试→分配岗位→入职',onboardingMaterials:'身份证、1寸照片',onboardingFee:'无',keywords:'长白班、可接受暑假工'}
     ];
+    let fields=systemFields.map(([id,label])=>({id,label,type:'system',hidden:false,filterMode:enumDefaults.has(id)?'enum':'fuzzy'}));
+    let currentPage=1;
+    const pageSize=3;
+    const columnFilters=new Map();
+    let filteringFieldId='';
+    let dragFieldId='';
+    const defaultOrder=fields.map(f=>f.id);
+    function fieldIndex(id){return fields.findIndex(f=>f.id===id)}
+    function fieldById(id){return fields.find(f=>f.id===id)}
     function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-    function render(){
-      const q=document.getElementById('search').value.trim().toLowerCase(),region=document.getElementById('region').value,list=document.getElementById('list'),empty=document.getElementById('empty');
-      const filtered=data.filter(r=>{if(q&&!r.company.toLowerCase().includes(q))return false;if(region&&!r.province.includes(region))return false;return true});
-      document.getElementById('total').textContent=data.length;
-      if(!filtered.length){list.innerHTML='';empty.style.display='block';return}
-      empty.style.display='none';
-      list.innerHTML=filtered.map(r=>`<div class="card" onclick="openDetail('${r.seq}')">
-        <div><span class="tag ${r.orderType==='一手单'?'first':'second'}">${esc(r.orderType)}</span></div>
-        <h3>${esc(r.company)}</h3>
-        <div class="meta">${esc(r.province+ ' ' + r.city + ' ' + r.district)}</div>
-        <div class="row"><span class="demand">${esc(r.position)} · ${esc(r.demand)}</span><span class="salary">${esc(r.salary)}</span></div>
-        <div class="contact">对接人：${esc(r.interviewContact)}</div>
-      </div>`).join('')
+    function cellValue(row,id){
+      const idx=fieldIndex(id);
+      return idx<0||idx>=row.cells.length?'':row.cells[idx].textContent.trim();
     }
-    function openDetail(seq){
-      const r=data.find(d=>d.seq===seq);if(!r)return;
-      document.getElementById('detailSheet').innerHTML=`<h2>${esc(r.company)}</h2><div class="detail-card">
-        <div class="detail-grid">${[
-          ['一二手单',r.orderType],['招聘岗位',r.position],['需求人数',r.demand+'人'],['薪资待遇',r.salary],
-          ['省份',r.province],['城市',r.city],['区县',r.district],['镇',r.town],
-          ['面试对接',r.interviewContact],['工作环境',r.environment],['用工性质',r.employmentType],
-          ['性别要求',r.gender],['年龄要求',r.age],['学历要求',r.education],
-          ['工作内容',r.jobContent],['工作时间',r.workHours],['食宿',r.meal],
-          ['结算方式',r.settlement],['发薪日',r.payday],['工作地点',r.workAddress],
-          ['面试地点',r.interviewAddress],['面试时间',r.interviewTime],['面试入职流程',r.interviewProcess],
-          ['入职材料',r.onboardingMaterials],['入职费用',r.onboardingFee],['亮点',r.keywords]
-        ].map(([k,v])=>`<div><div class="label">${esc(k)}</div><div class="value">${esc(v||'—')}</div></div>`).join('')}</div>
-      </div>`;
-      document.getElementById('detailOverlay').classList.add('show');
+    function enumValues(field){
+      const defs={orderType:['一手单','二手单'],employmentType:['正式工','派遣工','小时工'],holidayWorker:['是','否'],gender:['男','女','男女不限'],ethnicity:['不限'],education:['不限','小学','初中及以下','中专/中技','高中','大专','本科','硕士','博士','其他'],settlement:['日结','周结','月结']};
+      return field.enumValues||defs[field.id]||[...new Set(seedData.map(r=>r[field.id]).filter(Boolean))];
     }
-    function closeDetail(e){if(e.target===e.currentTarget)document.getElementById('detailOverlay').classList.remove('show')}
-    function openAdd(){document.getElementById('addOverlay').classList.add('show')}
-    function closeAdd(e){if(!e||e.target===e.currentTarget)document.getElementById('addOverlay').classList.remove('show')}
-    function addCustomer(e){
-      e.preventDefault();const f=new FormData(e.target);
-      data.unshift({seq:String(data.length+1),company:f.get('company'),orderType:f.get('orderType'),province:f.get('province')||'—',city:f.get('city')||'—',district:'—',town:'—',interviewContact:'待分配',position:f.get('position')||'待确认',demand:f.get('demand')||'待确认',salary:f.get('salary')||'面议',highlights:'',environment:'',employmentType:'',holidayWorker:'',gender:'',age:'',ethnicity:'',household:'',documents:'',education:'',hardRequirements:'',jobContent:'',workHours:'',meal:'',salaryDetail:'',subsidy:'',settlement:'',payday:'',payrollDesc:'',workAddress:'',interviewAddress:'',interviewDress:'',interviewTime:'',interviewProcess:'',onboardingMaterials:'',onboardingFee:'',keywords:''});
-      e.target.reset();closeAdd();render();
+    function renderMobileTable(){
+      const wrap=document.getElementById('mobTableWrap'),empty=document.getElementById('mobEmpty');
+      const oldTable=document.getElementById('mobTable');
+      if(oldTable)oldTable.remove();
+      const visible=fields.filter(f=>!f.hidden&&f.id!=='select');
+      const table=document.createElement('table');
+      table.id='mobTable';table.className='mob-table';
+      table.style.width=Math.max(720,visible.length*130)+'px';
+      const thead=table.createTHead(),headRow=thead.insertRow();
+      visible.forEach(field=>{
+        const th=document.createElement('th');th.dataset.fieldId=field.id;
+        if(field.id==='actions'){th.textContent=field.label}
+        else if(field.id==='seq'){th.innerHTML='<span class="th-grip">⋮⋮</span> 序号'}
+        else{
+          th.innerHTML=`<span class="th-grip">⋮⋮</span><span class="th-label">${esc(field.label)}</span><button class="mob-head-filter ${columnFilters.has(field.id)?'active':''}" onclick="openColumnFilter(event,'${field.id}')">⌄</button>`;
+          bindHeaderDrag(th,field.id);
+        }
+        headRow.appendChild(th);
+      });
+      const tbody=table.createTBody();
+      seedData.forEach(rec=>{
+        const tr=tbody.insertRow();
+        visible.forEach(field=>{
+          const td=tr.insertCell();td.dataset.fieldId=field.id;
+          if(field.id==='actions'){td.className='mob-actions';td.textContent='查看详情'}
+          else if(field.id==='seq'){td.textContent=rec.seq}
+          else{td.textContent=rec[field.id]||'—';if(field.id==='company')td.className='mob-company'}
+          td.title=td.textContent;
+        });
+      });
+      wrap.insertBefore(table,empty);
+      document.getElementById('mobTotal').textContent=seedData.length;
+      applyFilterAndPage();
     }
-    render();
+    function applyFilterAndPage(){
+      const table=document.getElementById('mobTable');
+      if(!table)return;
+      const rows=[...table.tBodies[0].rows];
+      const matched=rows.filter(row=>{
+        for(const [id,rule] of columnFilters){
+          const value=cellValue(row,id).toLowerCase();
+          if(rule.mode==='enum'){if(!rule.values.some(v=>v.toLowerCase()===value))return false;continue}
+          const target=rule.value.toLowerCase();
+          if(rule.operator==='contains'&&!value.includes(target))return false;
+          if(rule.operator==='equals'&&value!==target)return false;
+          if(rule.operator==='notContains'&&value.includes(target))return false;
+          if(rule.operator==='empty'&&value&&value!=='—')return false;
+          if(rule.operator==='notEmpty'&&(!value||value==='—'))return false;
+        }
+        return true;
+      });
+      const pages=Math.max(1,Math.ceil(matched.length/pageSize));
+      currentPage=Math.min(currentPage,pages);
+      rows.forEach(row=>row.style.display='none');
+      matched.slice((currentPage-1)*pageSize,currentPage*pageSize).forEach(row=>row.style.display='');
+      const empty=document.getElementById('mobEmpty');
+      if(!matched.length){empty.style.display='block';table.style.display='none'}
+      else{empty.style.display='none';table.style.display=''}
+      document.getElementById('mobCount').textContent=matched.length;
+      document.getElementById('mobPageInfo').textContent=currentPage+'/'+pages;
+      document.getElementById('mobPageBtn').textContent=currentPage;
+      document.getElementById('mobPrev').disabled=currentPage<=1;
+      document.getElementById('mobNext').disabled=currentPage>=pages;
+      renderFilterChips();
+      document.getElementById('filterBadgeBtn').classList.toggle('active',columnFilters.size>0);
+    }
+    function changePage(step){currentPage+=step;applyFilterAndPage()}
+    function moveField(sourceId,targetId){
+      if(!sourceId||sourceId===targetId||sourceId==='actions'||targetId==='actions')return;
+      const from=fieldIndex(sourceId),to=fieldIndex(targetId);
+      if(from<1||to<1||from>=fields.length-1||to>=fields.length-1)return;
+      const table=document.getElementById('mobTable');
+      if(!table)return;
+      [...table.rows].forEach(row=>{const m=row.cells[from],t=row.cells[to];row.insertBefore(m,from<to?t.nextSibling:t)});
+      fields.splice(to,0,fields.splice(from,1)[0]);
+      applyFilterAndPage();
+    }
+    function bindHeaderDrag(th,id){
+      th.ondragstart=e=>{
+        if(e.target.closest('.mob-head-filter')){e.preventDefault();return}
+        dragFieldId=id;th.classList.add('mob-dragging');e.dataTransfer.effectAllowed='move'
+      };
+      th.ondragend=()=>document.querySelectorAll('#mobTable th').forEach(x=>x.classList.remove('mob-dragging','mob-drag-over'));
+      th.ondragover=e=>{e.preventDefault();th.classList.add('mob-drag-over')};
+      th.ondragleave=()=>th.classList.remove('mob-drag-over');
+      th.ondrop=e=>{e.preventDefault();moveField(dragFieldId,id)};
+      let timer,touchDragging=false;
+      th.onpointerdown=e=>{
+        if(e.target.closest('.mob-head-filter'))return;
+        timer=setTimeout(()=>{touchDragging=true;dragFieldId=id;th.classList.add('mob-dragging')},400)
+      };
+      th.onpointermove=e=>{
+        if(!touchDragging)return;
+        document.querySelectorAll('#mobTable th').forEach(x=>x.classList.remove('mob-drag-over'));
+        const tgt=document.elementFromPoint(e.clientX,e.clientY)?.closest('#mobTable th[data-field-id]');
+        if(tgt&&tgt.dataset.fieldId!=='actions')tgt.classList.add('mob-drag-over')
+      };
+      th.onpointerup=e=>{
+        clearTimeout(timer);
+        if(!touchDragging)return;
+        touchDragging=false;
+        const tgt=document.elementFromPoint(e.clientX,e.clientY)?.closest('#mobTable th[data-field-id]');
+        document.querySelectorAll('#mobTable th').forEach(x=>x.classList.remove('mob-dragging','mob-drag-over'));
+        if(tgt&&tgt.dataset.fieldId!=='actions')moveField(id,tgt.dataset.fieldId)
+      };
+      th.onpointercancel=()=>{clearTimeout(timer);touchDragging=false;th.classList.remove('mob-dragging')}
+    }
+    function openColumnFilter(e,id){
+      e.stopPropagation();filteringFieldId=id;
+      const field=fieldById(id);if(!field)return;
+      document.getElementById('filterTitle').textContent=(field.filterMode==='enum'?'枚举筛选：':'模糊查询：')+field.label;
+      document.getElementById('fuzzyFilter').style.display=field.filterMode==='fuzzy'?'block':'none';
+      document.getElementById('enumFilter').style.display=field.filterMode==='enum'?'block':'none';
+      const rule=columnFilters.get(id);
+      if(field.filterMode==='fuzzy'){
+        document.getElementById('filterOperator').value=rule?.operator||'contains';
+        document.getElementById('filterValue').value=rule?.value||'';toggleFilterInput()
+      }else{
+        const sel=new Set(rule?.values||[]);
+        const vals=[...new Set([...enumValues(field),...seedData.map(r=>r[field.id])])].filter(Boolean).sort();
+        document.getElementById('enumList').innerHTML=vals.map(v=>`<label><input type="checkbox" value="${esc(v)}" ${sel.has(v)?'checked':''}><span>${esc(v||'（空）')}</span></label>`).join('')
+      }
+      document.getElementById('filterOverlay').classList.add('show')
+    }
+    function toggleFilterInput(){
+      const op=document.getElementById('filterOperator').value;
+      document.getElementById('filterValue').style.display=['empty','notEmpty'].includes(op)?'none':'block'
+    }
+    function applyCurrentFilter(){
+      const field=fieldById(filteringFieldId);if(!field){closeFilterPanel();return}
+      if(field.filterMode==='enum'){
+        const vals=[...document.querySelectorAll('#enumList input:checked')].map(x=>x.value);
+        if(!vals.length)return;columnFilters.set(filteringFieldId,{mode:'enum',values:vals,label:field.label})
+      }else{
+        const op=document.getElementById('filterOperator').value,val=document.getElementById('filterValue').value.trim();
+        if(!['empty','notEmpty'].includes(op)&&!val)return;
+        columnFilters.set(filteringFieldId,{mode:'fuzzy',operator:op,value:val,label:field.label})
+      }
+      closeFilterPanel();applyFilterAndPage()
+    }
+    function clearCurrentFilter(){columnFilters.delete(filteringFieldId);closeFilterPanel();applyFilterAndPage()}
+    function clearFieldFilter(id){columnFilters.delete(id);applyFilterAndPage()}
+    function clearAllFilters(){columnFilters.clear();applyFilterAndPage()}
+    function closeFilterPanel(e){if(e&&e.target!==document.getElementById('filterOverlay')&&e.target!==e.currentTarget)return;document.getElementById('filterOverlay').classList.remove('show')}
+    function toggleFilterPanel(){document.getElementById('filterOverlay').classList.toggle('show')}
+    function renderFilterChips(){
+      const box=document.getElementById('filterChips');
+      if(!columnFilters.size){box.innerHTML='';return}
+      const chips=[];
+      for(const [id,rule] of columnFilters){
+        const f=fieldById(id);if(!f)continue
+        const s=rule.mode==='enum'?f.label+'('+(rule.values||[]).length+'项)':f.label+': '+rule.value;
+        chips.push('<span class="filter-chip">'+esc(s)+'<button onclick="clearFieldFilter(\''+id+'\')">×</button></span>')
+      }
+      chips.push('<button class="clear-all" onclick="clearAllFilters()">清除全部</button>');
+      box.innerHTML=chips.join('')
+    }
+    renderMobileTable();
   </script>
 </body>
 </html>
